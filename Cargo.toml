@@ -5,3 +5,4 @@ authors = ["John <purrlinn@web.de>"]
 edition = "2018"
 
 [dependencies]
+stopwatch = "0.0.7"
