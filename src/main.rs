@@ -1,3 +1,6 @@
+mod day_one;
+
 fn main() {
-    println!("Hello, world!");
+    let result = day_one::part_one::frequency_string_to_array(day_one::part_one::data::INPUT);
+    println!("Result: {:?}", result);
 }
