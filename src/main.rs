@@ -10,4 +10,7 @@ fn main() {
 
     let result_2_1 = day_two::result_part_one();
     println!("Result_2_1: {}", result_2_1);
+
+    let result_2_2 = day_two::result_part_two();
+    println!("Result_2_2: {}", result_2_2);
 }
