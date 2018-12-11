@@ -1,6 +1,6 @@
+mod data;
 mod part_one;
 mod part_two;
-mod data;
 mod utils;
 
 pub fn result_part_one() -> i32 {
