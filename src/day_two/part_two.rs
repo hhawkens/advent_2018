@@ -19,7 +19,7 @@ fn get_twin_boxes() -> (String, String) {
     result
 }
 
-fn are_equal_bar_one(first: &String, second: &String) -> bool {
+fn are_equal_bar_one(first: &str, second: &str) -> bool {
     let mut counter = 0;
     first.chars().zip(second.chars()).for_each(|char_pair| {
         if char_pair.0 != char_pair.1 {
@@ -30,7 +30,7 @@ fn are_equal_bar_one(first: &String, second: &String) -> bool {
     counter == 1
 }
 
-fn get_common_chars(first: &String, second: &String) -> String {
+fn get_common_chars(first: &str, second: &str) -> String {
     first
         .chars()
         .zip(second.chars())
