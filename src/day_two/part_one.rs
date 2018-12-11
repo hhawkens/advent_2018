@@ -20,11 +20,7 @@ fn has_identical_letters(word: &str, num_identical_letters: i32) -> bool {
     let mut letter_count_map = HashMap::new();
 
     for c in word.chars() {
-        if letter_count_map.contains_key(&c) {
-            *letter_count_map.get_mut(&c).unwrap() += 1;
-        } else {
-            letter_count_map.insert(c, 1);
-        }
+        *letter_count_map.entry(c).or_insert(0) += 1;
     }
     letter_count_map
         .values()
