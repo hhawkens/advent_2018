@@ -1,3 +1,3 @@
 mod data;
-pub mod utils;
 mod types;
+pub mod utils;
