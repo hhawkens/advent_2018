@@ -4,7 +4,7 @@ pub struct Rect {
     pub size: Size,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Point {
     /// To the right
     pub x: i32,
