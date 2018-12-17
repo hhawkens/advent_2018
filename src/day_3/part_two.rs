@@ -6,7 +6,7 @@ pub fn are_claims_overlapping(first: &Rect, second: &Rect) -> bool { // TODO pri
 
 fn overlap_horizontally(first: &Rect, second: &Rect) -> bool {
     let (leftmost, rightmost) = get_leftmost_and_rightmost_location(first, second);
-    leftmost.location.x + leftmost.size.w >= rightmost.location.x
+    leftmost.location.x + leftmost.size.w > rightmost.location.x
 }
 
 fn get_leftmost_and_rightmost_location<'a>(first: &'a Rect, second: &'a Rect) -> (&'a Rect, &'a Rect) {
@@ -19,7 +19,7 @@ fn get_leftmost_and_rightmost_location<'a>(first: &'a Rect, second: &'a Rect) ->
 
 fn overlap_vertically(first: &Rect, second: &Rect) -> bool {
     let (highest, lowest) = get_highest_and_lowest_location(first, second);
-    highest.location.y + highest.size.h >= lowest.location.y
+    highest.location.y + highest.size.h > lowest.location.y
 }
 
 fn get_highest_and_lowest_location<'a>(first: &'a Rect, second: &'a Rect) -> (&'a Rect, &'a Rect) {
