@@ -6,16 +6,16 @@ pub fn find_claim_id_without_overlap() -> i32 {
         let mut found_overlap = false;
         for (id_inner, claim_inner) in &claims {
             if *id_inner == *id_outer {
-                continue
+                continue;
             }
             if are_claims_overlapping(claim_outer, claim_inner) {
                 found_overlap = true;
-                break
+                break;
             }
         }
 
         if found_overlap {
-            continue
+            continue;
         } else {
             return *id_outer;
         }
@@ -32,7 +32,10 @@ fn are_overlapping_horizontally(first: &Rect, second: &Rect) -> bool {
     leftmost.location.x + leftmost.size.w > rightmost.location.x
 }
 
-fn get_leftmost_and_rightmost_location<'a>(first: &'a Rect, second: &'a Rect) -> (&'a Rect, &'a Rect) {
+fn get_leftmost_and_rightmost_location<'a>(
+    first: &'a Rect,
+    second: &'a Rect,
+) -> (&'a Rect, &'a Rect) {
     if first.location.x < second.location.x {
         (first, second)
     } else {
