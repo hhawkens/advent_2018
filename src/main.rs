@@ -1,6 +1,7 @@
 mod day_1;
 mod day_2;
 mod day_3;
+mod day_4;
 
 fn main() {
     let result_1_1 = day_1::result_part_one();
@@ -20,4 +21,7 @@ fn main() {
 
     let result_3_2 = day_3::result_part_two();
     println!("Result_3_2: {}", result_3_2);
+
+    let result_4_1 = day_4::result_part_one();
+    println!("Result_4_1: {}", result_4_1);
 }
