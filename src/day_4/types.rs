@@ -6,14 +6,14 @@ pub type Time = DateTime<Utc>;
 pub enum GuardAction {
     BeginsShift,
     FallsAsleep,
-    WakesUp
+    WakesUp,
 }
 
 #[derive(Debug, Eq, PartialEq)]
 pub struct GuardEvent {
     pub id: i32,
     pub time: Time,
-    pub action: GuardAction
+    pub action: GuardAction,
 }
 
 impl Ord for GuardEvent {

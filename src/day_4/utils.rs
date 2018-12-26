@@ -1,19 +1,17 @@
-use regex::Regex;
-use chrono::prelude::*;
 use super::types::*;
+use chrono::prelude::*;
+use regex::Regex;
 
 pub fn get_guard_events() -> Vec<GuardEvent> {
     let mut guard_events = Vec::new();
     let guard_events_text = super::data::GUARD_SLEEP_TIMES;
 
-    guard_events_text
-        .lines()
-        .for_each(|l| {
-            let time = get_time_from_line(l);
-            let id = get_id_from_line(l);
-            let action = get_action_from_line(l);
-            guard_events.push(GuardEvent { id, time, action });
-        });
+    guard_events_text.lines().for_each(|l| {
+        let time = get_time_from_line(l);
+        let id = get_id_from_line(l);
+        let action = get_action_from_line(l);
+        guard_events.push(GuardEvent { id, time, action });
+    });
 
     guard_events.sort();
     assign_ids_to_guard_events(&mut guard_events);
@@ -23,13 +21,15 @@ pub fn get_guard_events() -> Vec<GuardEvent> {
 
 fn get_time_from_line(guard_event_text: &str) -> Time {
     let re = Regex::new(r"\[.*]").unwrap();
-    let time_text = re.find(guard_event_text)
+    let time_text = re
+        .find(guard_event_text)
         .unwrap()
         .as_str()
         .replace("[", "")
         .replace("]", "");
 
-    Utc.datetime_from_str(time_text.as_str(), "%Y-%m-%d %H:%M").unwrap()
+    Utc.datetime_from_str(time_text.as_str(), "%Y-%m-%d %H:%M")
+        .unwrap()
 }
 
 fn get_id_from_line(guard_event_text: &str) -> i32 {
@@ -38,7 +38,7 @@ fn get_id_from_line(guard_event_text: &str) -> i32 {
 
     match id_match {
         Some(s) => s.as_str().replace("#", "").parse::<i32>().unwrap(),
-        None => -1
+        None => -1,
     }
 }
 
