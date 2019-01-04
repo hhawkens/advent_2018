@@ -11,6 +11,7 @@ pub fn get_guard_and_most_slept_minute() -> (i32, i32) {
     for (guard_id, sleep_minutes) in guard_sleep_minutes {
         for (sleep_minute, count) in sleep_minutes {
             if count > highest_count {
+                highest_count = count;
                 guard_result = guard_id;
                 minute_result = sleep_minute;
             }
@@ -20,7 +21,7 @@ pub fn get_guard_and_most_slept_minute() -> (i32, i32) {
     (guard_result, minute_result)
 }
 
-pub fn get_guard_sleep_minutes() -> HashMap<i32, GuardSleepMinutes> {
+fn get_guard_sleep_minutes() -> HashMap<i32, GuardSleepMinutes> {
     let guard_events = super::utils::get_guard_events();
     let mut start_sleep_event: Option<&GuardEvent> = None;
     let mut guard_sleep_minutes = HashMap::new();
