@@ -13,15 +13,13 @@ pub fn get_guard_sleep_minutes() -> HashMap<i32, GuardSleepMinutes> {
             GuardAction::WakesUp => {
                 let current_sleep_minutes = guard_sleep_minutes
                     .entry(guard_event.id)
-                    .or_insert(GuardSleepMinutes { sleep_minute_count: HashMap::new() });
+                    .or_insert(GuardSleepMinutes::new());
 
                 let start = start_sleep_event.unwrap().time.minute();
                 let end = guard_event.time.minute();
 
                 for minute in start..end {
-                    *current_sleep_minutes.sleep_minute_count
-                        .entry(minute as i32)
-                        .or_insert(0) += 1;
+                    *current_sleep_minutes.entry(minute as i32).or_insert(0) += 1;
                 }
             },
             _ => { }

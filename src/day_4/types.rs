@@ -2,6 +2,7 @@ use chrono::prelude::*;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 pub type Time = DateTime<Utc>;
+pub type GuardSleepMinutes = HashMap<i32, i32>;
 
 #[derive(Debug, Eq, PartialEq)]
 pub enum GuardAction {
@@ -15,11 +16,6 @@ pub struct GuardEvent {
     pub id: i32,
     pub time: Time,
     pub action: GuardAction,
-}
-
-#[derive(Debug, Eq, PartialEq, Default)]
-pub struct GuardSleepMinutes {
-    pub sleep_minute_count: HashMap<i32, i32>
 }
 
 impl Ord for GuardEvent {
