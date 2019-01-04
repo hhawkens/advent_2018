@@ -1,6 +1,6 @@
+use super::types::*;
 use chrono::prelude::*;
 use std::collections::HashMap;
-use super::types::*;
 
 pub fn get_guard_and_most_slept_minute() -> (i32, i32) {
     let guard_sleep_minutes = get_guard_sleep_minutes();
@@ -32,7 +32,7 @@ fn get_guard_sleep_minutes() -> HashMap<i32, GuardSleepMinutes> {
             GuardAction::WakesUp => {
                 let current_sleep_minutes = guard_sleep_minutes
                     .entry(guard_event.id)
-                    .or_insert(GuardSleepMinutes::new());
+                    .or_insert_with(GuardSleepMinutes::new);
 
                 let start = start_sleep_event.unwrap().time.minute();
                 let end = guard_event.time.minute();
@@ -40,8 +40,8 @@ fn get_guard_sleep_minutes() -> HashMap<i32, GuardSleepMinutes> {
                 for minute in start..end {
                     *current_sleep_minutes.entry(minute as i32).or_insert(0) += 1;
                 }
-            },
-            _ => { }
+            }
+            _ => (),
         }
     }
 
