@@ -7,13 +7,27 @@ pub fn react_polymer_parallel(polymer: &str) -> String {
     }
 
     let mut reacted_polymer = polymer.to_string();
+    let mut skip_loop_count = 0;
 
     for thread_count in (2..25).rev() {
+        if skip_loop_count > 0 {
+            skip_loop_count -= 1;
+            continue;
+        }
+
         let text_chunks = split_string_into_chunks(&reacted_polymer, thread_count);
+        let polymer_count_before = reacted_polymer.len();
+
         reacted_polymer = text_chunks
             .par_iter()
             .map(|text_chunk| { react_polymer(text_chunk) })
             .collect();
+
+        let polymer_count_after = reacted_polymer.len();
+
+        if polymer_count_before == polymer_count_after {
+            skip_loop_count = 3;
+        }
     }
 
     react_polymer(&reacted_polymer)
