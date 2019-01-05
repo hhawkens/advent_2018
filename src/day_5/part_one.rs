@@ -1,6 +1,25 @@
-use num_traits::Num;
+use rayon::prelude::*;
+use std::cmp::{min};
 
-pub fn react_polymer(polymer: &str) -> String {
+pub fn react_polymer_parallel(polymer: &str) -> String {
+    if polymer.len() < 2500 {
+        return react_polymer(polymer);
+    }
+
+    let mut reacted_polymer = polymer.to_string();
+
+    for thread_count in (2..25).rev() {
+        let text_chunks = split_string_into_chunks(&reacted_polymer, thread_count);
+        reacted_polymer = text_chunks
+            .par_iter()
+            .map(|text_chunk| { react_polymer(text_chunk) })
+            .collect();
+    }
+
+    react_polymer(&reacted_polymer)
+}
+
+fn react_polymer(polymer: &str) -> String {
     let mut reacted_polymer = polymer.to_string();
     let mut all_reactions_finished = false;
 
@@ -36,4 +55,17 @@ fn do_polymer_parts_react(first: &char, second: &char) -> bool {
     let are_equal = first.to_lowercase().to_string() == second.to_lowercase().to_string();
 
     are_equal && !are_same
+}
+
+fn split_string_into_chunks(text: &str, chunk_count: usize) -> Vec<&str> {
+    let chars_per_chunk = (text.len() as f64 / chunk_count as f64).ceil() as usize;
+    let mut chunks = vec![];
+    let mut cur = text;
+    while !cur.is_empty() {
+        let (chunk, rest) = cur.split_at(min(chars_per_chunk, cur.len()));
+        chunks.push(chunk);
+        cur = rest;
+    }
+
+    chunks
 }

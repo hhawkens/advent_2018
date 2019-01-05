@@ -1,2 +1,7 @@
 mod data;
-pub mod part_one; // TODO
+mod part_one;
+
+pub fn result_part_one() -> usize {
+    let reacted_polymer = part_one::react_polymer_parallel(data::POLYMER);
+    reacted_polymer.chars().count()
+}
