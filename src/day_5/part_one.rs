@@ -19,6 +19,7 @@ pub fn react_polymer(polymer: &str) -> String {
             if do_polymer_parts_react(&first, &second) {
                 indices_to_remove.push(char_index);
                 indices_to_remove.push(char_index + 1);
+                skip_one_turn = true;
             }
         }
 
