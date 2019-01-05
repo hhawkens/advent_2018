@@ -1,5 +1,5 @@
 use rayon::prelude::*;
-use std::cmp::{min};
+use std::cmp::min;
 
 pub fn react_polymer_parallel(polymer: &str) -> String {
     if polymer.len() < 2500 {
@@ -20,7 +20,7 @@ pub fn react_polymer_parallel(polymer: &str) -> String {
 
         reacted_polymer = text_chunks
             .par_iter()
-            .map(|text_chunk| { react_polymer(text_chunk) })
+            .map(|text_chunk| react_polymer(text_chunk))
             .collect();
 
         let polymer_count_after = reacted_polymer.len();
@@ -47,7 +47,7 @@ fn react_polymer(polymer: &str) -> String {
 
             let first = reacted_polymer.chars().nth(char_index).unwrap();
             let second = reacted_polymer.chars().nth(char_index - 1).unwrap();
-            if do_polymer_parts_react(&first, &second) {
+            if do_polymer_parts_react(first, second) {
                 reacted_polymer.remove(char_index);
                 reacted_polymer.remove(char_index - 1);
                 skip_one_turn = true;
@@ -62,7 +62,7 @@ fn react_polymer(polymer: &str) -> String {
     reacted_polymer
 }
 
-fn do_polymer_parts_react(first: &char, second: &char) -> bool {
+fn do_polymer_parts_react(first: char, second: char) -> bool {
     let are_same = first == second;
     let are_equal = first.to_lowercase().to_string() == second.to_lowercase().to_string();
 
