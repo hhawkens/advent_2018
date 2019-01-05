@@ -35,9 +35,8 @@ pub fn react_polymer_parallel(polymer: &str) -> String {
 
 fn react_polymer(polymer: &str) -> String {
     let mut reacted_polymer = polymer.to_string();
-    let mut all_reactions_finished = false;
 
-    while !all_reactions_finished {
+    loop {
         let last_index = reacted_polymer.chars().count();
         let mut skip_one_turn = false;
         for char_index in (1..last_index).rev() {
@@ -56,7 +55,6 @@ fn react_polymer(polymer: &str) -> String {
         }
 
         if reacted_polymer.chars().count() == last_index {
-            all_reactions_finished = true;
             break;
         }
     }
