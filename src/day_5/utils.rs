@@ -47,7 +47,7 @@ fn react_polymer(polymer: &str) -> String {
 
             let first = reacted_polymer.chars().nth(char_index).unwrap();
             let second = reacted_polymer.chars().nth(char_index - 1).unwrap();
-            if do_polymer_parts_react(first, second) {
+            if do_polymer_units_react(first, second) {
                 reacted_polymer.remove(char_index);
                 reacted_polymer.remove(char_index - 1);
                 skip_one_turn = true;
@@ -62,7 +62,7 @@ fn react_polymer(polymer: &str) -> String {
     reacted_polymer
 }
 
-fn do_polymer_parts_react(first: char, second: char) -> bool {
+fn do_polymer_units_react(first: char, second: char) -> bool {
     let are_same = first == second;
     let are_equal = first.to_lowercase().to_string() == second.to_lowercase().to_string();
 
