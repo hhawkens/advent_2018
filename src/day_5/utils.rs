@@ -1,50 +1,49 @@
 use rayon::prelude::*;
 use std::cmp::min;
 
-pub fn react_polymer_parallel(polymer: &str) -> String {
-    if polymer.len() < 2500 {
-        return react_polymer(polymer);
+const TASK_COUNT: usize = 26;
+
+pub fn chain_react_polymer(polymer: &str) -> String {
+    if polymer.len() < 5000 {
+        return react_polymer(polymer, &react_polymer_one_iteration);
     }
 
     let mut reacted_polymer = polymer.to_string();
-    let mut skip_loop_count = 0;
 
-    for task_count in (2..25).rev() {
-        if skip_loop_count > 0 {
-            skip_loop_count -= 1;
-            continue;
-        }
-
+    for task_count in (2..TASK_COUNT).rev() {
         let text_chunks = split_string_into_chunks(&reacted_polymer, task_count);
-        let polymer_count_before = reacted_polymer.len();
 
         reacted_polymer = text_chunks
             .par_iter()
-            .map(|text_chunk| react_polymer(text_chunk))
+            .map(|text_chunk| react_polymer(text_chunk, &react_polymer_one_iteration_parallel))
             .collect();
-
-        let polymer_count_after = reacted_polymer.len();
-
-        if polymer_count_before == polymer_count_after {
-            skip_loop_count = 2;
-        }
     }
 
-    react_polymer(&reacted_polymer)
+    react_polymer(&reacted_polymer, &react_polymer_one_iteration)
 }
 
-fn react_polymer(polymer: &str) -> String {
+fn react_polymer(polymer: &str, reaction_fn: &Fn(&str) -> String) -> String {
     let mut reacted_polymer = polymer.to_string();
+    let mut size_before = 0;
+    let mut size_after = 1;
 
-    loop {
-        let size_before = reacted_polymer.len();
-        reacted_polymer = react_polymer_one_iteration(&reacted_polymer);
-        let size_after = reacted_polymer.len();
-
-        if size_before == size_after {
-            break;
-        }
+    while size_before != size_after {
+        size_before = reacted_polymer.len();
+        reacted_polymer = reaction_fn(&reacted_polymer);
+        size_after = reacted_polymer.len();
     }
+
+    reacted_polymer
+}
+
+fn react_polymer_one_iteration_parallel(polymer: &str) -> String {
+    let mut reacted_polymer = polymer.to_string();
+    let text_chunks = split_string_into_chunks(&reacted_polymer, TASK_COUNT / 3);
+
+    reacted_polymer = text_chunks
+        .par_iter()
+        .map(|text_chunk| react_polymer_one_iteration(text_chunk))
+        .collect();
 
     reacted_polymer
 }
