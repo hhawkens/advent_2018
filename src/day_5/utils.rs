@@ -9,13 +9,13 @@ pub fn react_polymer_parallel(polymer: &str) -> String {
     let mut reacted_polymer = polymer.to_string();
     let mut skip_loop_count = 0;
 
-    for thread_count in (2..25).rev() {
+    for task_count in (2..25).rev() {
         if skip_loop_count > 0 {
             skip_loop_count -= 1;
             continue;
         }
 
-        let text_chunks = split_string_into_chunks(&reacted_polymer, thread_count);
+        let text_chunks = split_string_into_chunks(&reacted_polymer, task_count);
         let polymer_count_before = reacted_polymer.len();
 
         reacted_polymer = text_chunks
@@ -26,7 +26,7 @@ pub fn react_polymer_parallel(polymer: &str) -> String {
         let polymer_count_after = reacted_polymer.len();
 
         if polymer_count_before == polymer_count_after {
-            skip_loop_count = 3;
+            skip_loop_count = 2;
         }
     }
 
@@ -37,25 +37,35 @@ fn react_polymer(polymer: &str) -> String {
     let mut reacted_polymer = polymer.to_string();
 
     loop {
-        let last_index = reacted_polymer.chars().count();
-        let mut skip_one_turn = false;
-        for char_index in (1..last_index).rev() {
-            if skip_one_turn {
-                skip_one_turn = false;
-                continue;
-            }
+        let size_before = reacted_polymer.len();
+        reacted_polymer = react_polymer_one_iteration(&reacted_polymer);
+        let size_after = reacted_polymer.len();
 
-            let first = reacted_polymer.chars().nth(char_index).unwrap();
-            let second = reacted_polymer.chars().nth(char_index - 1).unwrap();
-            if do_polymer_units_react(first, second) {
-                reacted_polymer.remove(char_index);
-                reacted_polymer.remove(char_index - 1);
-                skip_one_turn = true;
-            }
+        if size_before == size_after {
+            break;
+        }
+    }
+
+    reacted_polymer
+}
+
+fn react_polymer_one_iteration(polymer: &str) -> String {
+    let mut reacted_polymer = polymer.to_string();
+
+    let last_index = reacted_polymer.chars().count();
+    let mut skip_one_turn = false;
+    for char_index in (1..last_index).rev() {
+        if skip_one_turn {
+            skip_one_turn = false;
+            continue;
         }
 
-        if reacted_polymer.chars().count() == last_index {
-            break;
+        let first = reacted_polymer.chars().nth(char_index).unwrap();
+        let second = reacted_polymer.chars().nth(char_index - 1).unwrap();
+        if do_polymer_units_react(first, second) {
+            reacted_polymer.remove(char_index);
+            reacted_polymer.remove(char_index - 1);
+            skip_one_turn = true;
         }
     }
 
