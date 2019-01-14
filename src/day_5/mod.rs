@@ -1,6 +1,6 @@
 mod data;
-mod utils;
 mod part_two;
+mod utils;
 
 use rayon::prelude::*;
 
