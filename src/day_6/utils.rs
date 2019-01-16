@@ -1,9 +1,10 @@
 use super::types::Point;
 use super::data::COORDINATES;
 use num_traits::real::Real;
+use std::collections::HashSet;
 
-pub fn get_coordinates() -> Vec<Point> {
-    let mut coordinates = vec![];
+pub fn get_coordinates() -> HashSet<Point> {
+    let mut coordinates = HashSet::new();
 
     COORDINATES
         .lines()
@@ -11,7 +12,7 @@ pub fn get_coordinates() -> Vec<Point> {
             let mut points = line.split(", ").map(|p| {
                 p.parse::<i32>().unwrap()
             });
-            coordinates.push(Point { x: points.next().unwrap(), y: points.next().unwrap() });
+            coordinates.insert(Point { x: points.next().unwrap(), y: points.next().unwrap() });
         });
 
     coordinates

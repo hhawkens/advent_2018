@@ -1,6 +1,8 @@
-/// Point in a grid coordinate system. Upper left is (0,0)
-#[derive(Debug)]
+/// Point in a grid coordinate system
+#[derive(Debug, Hash)]
 pub struct Point {
+    /// To the right
     pub x: i32,
+    /// Downwards
     pub y: i32
 }
