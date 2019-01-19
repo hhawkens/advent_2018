@@ -7,6 +7,7 @@ pub struct Point {
     pub y: i32,
 }
 
+#[derive(Copy, Clone)]
 pub enum PointAxis {
     X,
     Y,

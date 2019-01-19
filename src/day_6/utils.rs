@@ -43,7 +43,7 @@ pub fn get_extreme_points<'a>(points: impl IntoIterator<Item = &'a Point>) -> Ha
         .chain(&up_extremes.1)
         .chain(&down_extremes.1)
         .dedup()
-        .map(|p| *p)
+        .cloned()
         .collect()
 }
 
