@@ -4,9 +4,10 @@ pub struct Point {
     /// To the right
     pub x: i32,
     /// Downwards
-    pub y: i32
+    pub y: i32,
 }
 
 pub enum PointAxis {
-    X, Y
+    X,
+    Y,
 }

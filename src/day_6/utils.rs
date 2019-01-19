@@ -1,19 +1,18 @@
 use super::types::{Point, PointAxis};
+use itertools::Itertools;
 use num_traits::real::Real;
 use std::collections::HashSet;
-use itertools::Itertools;
 
 pub fn get_coordinates(coord_text: &str) -> HashSet<Point> {
     let mut coordinates = HashSet::new();
 
-    coord_text
-        .lines()
-        .for_each(|line| {
-            let mut points = line.split(", ").map(|p| {
-                p.parse::<i32>().unwrap()
-            });
-            coordinates.insert(Point { x: points.next().unwrap(), y: points.next().unwrap() });
+    coord_text.lines().for_each(|line| {
+        let mut points = line.split(", ").map(|p| p.parse::<i32>().unwrap());
+        coordinates.insert(Point {
+            x: points.next().unwrap(),
+            y: points.next().unwrap(),
         });
+    });
 
     coordinates
 }
@@ -22,7 +21,7 @@ pub fn manhattan_distance(point_1: &Point, point_2: &Point) -> i32 {
     (point_1.x - point_2.x).abs() + (point_1.y - point_2.y).abs()
 }
 
-pub fn get_extreme_points<'a>(points: impl IntoIterator<Item=&'a Point>) -> HashSet<&'a Point> {
+pub fn get_extreme_points<'a>(points: impl IntoIterator<Item = &'a Point>) -> HashSet<&'a Point> {
     let mut left_extremes = (i32::max_value(), vec![]);
     let mut right_extremes = (i32::min_value(), vec![]);
     let mut up_extremes = (i32::max_value(), vec![]);
@@ -37,7 +36,9 @@ pub fn get_extreme_points<'a>(points: impl IntoIterator<Item=&'a Point>) -> Hash
         add_point_if_extreme(point, &mut down_extremes, PointAxis::Y, bigger_than);
     }
 
-    left_extremes.1.iter()
+    left_extremes
+        .1
+        .iter()
         .chain(&right_extremes.1)
         .chain(&up_extremes.1)
         .chain(&down_extremes.1)
@@ -46,8 +47,16 @@ pub fn get_extreme_points<'a>(points: impl IntoIterator<Item=&'a Point>) -> Hash
         .collect()
 }
 
-fn add_point_if_extreme<'a>(point: &'a Point, (curr_extreme, extreme_points): &mut (i32, Vec<&'a Point>), axis: PointAxis, compare_fn: impl Fn(i32, i32) -> bool) {
-    let point_extreme = match axis { PointAxis::X => point.x, PointAxis::Y => point.y };
+fn add_point_if_extreme<'a>(
+    point: &'a Point,
+    (curr_extreme, extreme_points): &mut (i32, Vec<&'a Point>),
+    axis: PointAxis,
+    compare_fn: impl Fn(i32, i32) -> bool,
+) {
+    let point_extreme = match axis {
+        PointAxis::X => point.x,
+        PointAxis::Y => point.y,
+    };
 
     if point_extreme == *curr_extreme {
         extreme_points.push(point);
