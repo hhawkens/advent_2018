@@ -3,18 +3,17 @@ use itertools::Itertools;
 use num_traits::real::Real;
 use std::collections::HashSet;
 
-pub fn get_coordinates(coord_text: &str) -> HashSet<Point> {
-    let mut coordinates = HashSet::new();
-
-    coord_text.lines().for_each(|line| {
-        let mut points = line.split(", ").map(|p| p.parse::<i32>().unwrap());
-        coordinates.insert(Point {
-            x: points.next().unwrap(),
-            y: points.next().unwrap(),
-        });
-    });
-
-    coordinates
+pub fn get_coordinates(coord_text: &str) -> Vec<Point> {
+    coord_text
+        .lines()
+        .map(|line| {
+            let mut points = line.split(", ").map(|p| p.parse::<i32>().unwrap());
+            Point {
+                x: points.next().unwrap(),
+                y: points.next().unwrap(),
+            }
+        })
+        .collect()
 }
 
 pub fn manhattan_distance(point_1: &Point, point_2: &Point) -> i32 {
