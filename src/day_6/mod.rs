@@ -1,5 +1,5 @@
 mod data;
-pub mod types;
+mod types;
 mod utils;
 mod part_one;
 
