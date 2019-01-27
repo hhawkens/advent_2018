@@ -22,11 +22,56 @@ pub fn manhattan_distance(point_1: &Point, point_2: &Point) -> u64 {
     ((point_1.x as i64 - point_2.x as i64).abs() + (point_1.y as i64 - point_2.y as i64).abs()) as u64
 }
 
-pub fn get_limited_area_points(points: &Vec<Point>) -> HashSet<&Point> {
+pub fn get_area_size_of_point(point: &Point, all_points: &Vec<Point>) -> i32 {
+    let mut area_point_count = 1; // 1 because the point itself belongs to its area
+
+    for i in 1.. {
+        let mut area_point_found = false;
+        let surrounding_points = point.get_surrounding_points(i);
+        for neighbour in surrounding_points {
+            if is_point_in_area_of(point, &neighbour, all_points) {
+                area_point_count += 1;
+                area_point_found = true;
+            }
+        }
+
+        if !area_point_found {
+            break;
+        }
+    }
+
+    area_point_count
+}
+
+pub fn get_limited_area_points(points: &Vec<Point>) -> Vec<&Point> {
     points
         .into_iter()
         .filter(|&p| { point_area_is_limited_in_all_directions_by(p, points) })
         .collect()
+}
+
+pub fn is_point_in_area_of(area_point: &Point, point: &Point, all_area_points: &Vec<Point>) -> bool {
+    if area_point == point {
+        return false;
+    }
+
+    let dist_area_point = manhattan_distance(area_point, point);
+
+    for cmp_area_point in all_area_points {
+        if cmp_area_point == point {
+            return false;
+        }
+        if area_point == cmp_area_point {
+            continue;
+        }
+
+        let dist_cmp_area_point = manhattan_distance(cmp_area_point, point);
+        if dist_cmp_area_point <= dist_area_point {
+            return false;
+        }
+    }
+
+    true
 }
 
 pub fn point_area_is_limited_in_all_directions_by(test_point: &Point, points: &Vec<Point>) -> bool {
