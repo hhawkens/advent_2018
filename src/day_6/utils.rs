@@ -1,6 +1,4 @@
 use super::types::{Point, AxisDirection};
-use std::collections::HashSet;
-use num_traits::real::Real;
 
 const MAX_INT: i32 = i32::max_value();
 const MIN_INT: i32 = i32::min_value();
