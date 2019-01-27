@@ -8,7 +8,9 @@ pub struct Point {
 }
 
 #[derive(Copy, Clone)]
-pub enum PointAxis {
-    X,
-    Y,
+pub enum AxisDirection {
+    Left,
+    Right,
+    Up,
+    Down
 }

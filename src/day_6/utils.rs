@@ -1,7 +1,9 @@
-use super::types::{Point, PointAxis};
-use itertools::Itertools;
-use num_traits::real::Real;
+use super::types::{Point, AxisDirection};
 use std::collections::HashSet;
+use num_traits::real::Real;
+
+const MAX_INT: i32 = i32::max_value();
+const MIN_INT: i32 = i32::min_value();
 
 pub fn get_coordinates(coord_text: &str) -> Vec<Point> {
     coord_text
@@ -16,52 +18,87 @@ pub fn get_coordinates(coord_text: &str) -> Vec<Point> {
         .collect()
 }
 
-pub fn manhattan_distance(point_1: &Point, point_2: &Point) -> i32 {
-    (point_1.x - point_2.x).abs() + (point_1.y - point_2.y).abs()
+pub fn manhattan_distance(point_1: &Point, point_2: &Point) -> u64 {
+    ((point_1.x as i64 - point_2.x as i64).abs() + (point_1.y as i64 - point_2.y as i64).abs()) as u64
 }
 
-pub fn get_extreme_points<'a>(points: impl IntoIterator<Item = &'a Point>) -> HashSet<&'a Point> {
-    let mut left_extremes = (i32::max_value(), vec![]);
-    let mut right_extremes = (i32::min_value(), vec![]);
-    let mut up_extremes = (i32::max_value(), vec![]);
-    let mut down_extremes = (i32::min_value(), vec![]);
-    let smaller_than = |i1: i32, i2: i32| i1 < i2;
-    let bigger_than = |i1: i32, i2: i32| i1 > i2;
-
-    for point in points {
-        add_point_if_extreme(point, &mut left_extremes, PointAxis::X, smaller_than);
-        add_point_if_extreme(point, &mut right_extremes, PointAxis::X, bigger_than);
-        add_point_if_extreme(point, &mut up_extremes, PointAxis::Y, smaller_than);
-        add_point_if_extreme(point, &mut down_extremes, PointAxis::Y, bigger_than);
-    }
-
-    left_extremes
-        .1
-        .iter()
-        .chain(&right_extremes.1)
-        .chain(&up_extremes.1)
-        .chain(&down_extremes.1)
-        .dedup()
-        .cloned()
+pub fn get_limited_area_points(points: &Vec<Point>) -> HashSet<&Point> {
+    points
+        .into_iter()
+        .filter(|&p| { point_area_is_limited_in_all_directions_by(p, points) })
         .collect()
 }
 
-fn add_point_if_extreme<'a>(
-    point: &'a Point,
-    (curr_extreme, extreme_points): &mut (i32, Vec<&'a Point>),
-    axis: PointAxis,
-    compare_fn: impl Fn(i32, i32) -> bool,
-) {
-    let point_extreme = match axis {
-        PointAxis::X => point.x,
-        PointAxis::Y => point.y,
-    };
+pub fn point_area_is_limited_in_all_directions_by(test_point: &Point, points: &Vec<Point>) -> bool {
+    let mut is_limited_left = false;
+    let mut is_limited_right = false;
+    let mut is_limited_up = false;
+    let mut is_limited_down = false;
 
-    if point_extreme == *curr_extreme {
-        extreme_points.push(point);
-    } else if compare_fn(point_extreme, *curr_extreme) {
-        *curr_extreme = point_extreme;
-        extreme_points.clear();
-        extreme_points.push(point);
+    for point in points {
+        let is_limited_fn = |dir: AxisDirection| {
+            is_point_area_limited_by(test_point, &point, dir)
+        };
+
+        if !is_limited_left {
+            is_limited_left = is_limited_fn(AxisDirection::Left);
+        }
+        if !is_limited_right {
+            is_limited_right = is_limited_fn(AxisDirection::Right);
+        }
+        if !is_limited_up {
+            is_limited_up = is_limited_fn(AxisDirection::Up);
+        }
+        if !is_limited_down {
+            is_limited_down = is_limited_fn(AxisDirection::Down);
+        }
+
+        if is_limited_left && is_limited_right && is_limited_up && is_limited_down {
+            return true;
+        }
     }
+
+    false
+}
+
+fn is_point_area_limited_by(tested_point: &Point, limiting_point: &Point, direction: AxisDirection) -> bool {
+    if tested_point == limiting_point {
+        return false;
+    }
+
+    match direction {
+        AxisDirection::Left => {
+            let extreme_left_point = Point {x: MIN_INT, y: tested_point.y};
+            if point_is_further_than(tested_point, limiting_point, extreme_left_point) {
+                return true;
+            }
+        },
+        AxisDirection::Right => {
+            let extreme_right_point = Point {x: MAX_INT, y: tested_point.y};
+            if point_is_further_than(tested_point, limiting_point, extreme_right_point) {
+                return true;
+            }
+        },
+        AxisDirection::Up => {
+            let extreme_up_point = Point {x: tested_point.x, y: MIN_INT};
+            if point_is_further_than(tested_point, limiting_point, extreme_up_point) {
+                return true;
+            }
+        },
+        AxisDirection::Down => {
+            let extreme_down_point = Point {x: tested_point.x, y: MAX_INT};
+            if point_is_further_than(tested_point, limiting_point, extreme_down_point) {
+                return true;
+            }
+        }
+    }
+
+    false
+}
+
+fn point_is_further_than(from_test: &Point, from_cmp: &Point, to: Point) -> bool {
+    let distance_test_point = manhattan_distance(from_test, &to);
+    let distance_cmp_point = manhattan_distance(from_cmp, &to);
+
+    distance_test_point >= distance_cmp_point
 }
