@@ -2,7 +2,7 @@ use super::types::*;
 use super::utils::*;
 use std::collections::HashMap;
 
-pub fn get_area_sizes_of_points<'a, 'b>(all_points: &'a Vec<Point>, limited_area_points: &'b Vec<&'b Point>) -> HashMap<&'b Point, i32> {
+pub fn get_area_sizes_of_points<'a, 'b>(all_points: &'a [Point], limited_area_points: &'b [&'b Point]) -> HashMap<&'b Point, i32> {
     limited_area_points
         .iter()
         .map(|&p| {

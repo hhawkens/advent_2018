@@ -16,7 +16,7 @@ pub fn get_coordinates(coord_text: &str) -> Vec<Point> {
         .collect()
 }
 
-pub fn get_area_size_of_point(point: &Point, all_points: &Vec<Point>) -> i32 {
+pub fn get_area_size_of_point(point: &Point, all_points: &[Point]) -> i32 {
     let mut area_point_count = 1; // 1 because the point itself belongs to its area
 
     for i in 1.. {
@@ -37,14 +37,14 @@ pub fn get_area_size_of_point(point: &Point, all_points: &Vec<Point>) -> i32 {
     area_point_count
 }
 
-pub fn get_limited_area_points(points: &Vec<Point>) -> Vec<&Point> {
+pub fn get_limited_area_points(points: &[Point]) -> Vec<&Point> {
     points
-        .into_iter()
+        .iter()
         .filter(|&p| { point_area_is_limited_in_all_directions_by(p, points) })
         .collect()
 }
 
-fn is_point_in_area_of(area_point: &Point, point: &Point, all_area_points: &Vec<Point>) -> bool {
+fn is_point_in_area_of(area_point: &Point, point: &Point, all_area_points: &[Point]) -> bool {
     if area_point == point {
         return false;
     }
@@ -68,7 +68,7 @@ fn is_point_in_area_of(area_point: &Point, point: &Point, all_area_points: &Vec<
     true
 }
 
-fn point_area_is_limited_in_all_directions_by(test_point: &Point, points: &Vec<Point>) -> bool {
+fn point_area_is_limited_in_all_directions_by(test_point: &Point, points: &[Point]) -> bool {
     let mut is_limited_left = false;
     let mut is_limited_right = false;
     let mut is_limited_up = false;
@@ -143,5 +143,5 @@ fn point_is_further_than(from_test: &Point, from_cmp: &Point, to: Point) -> bool
 }
 
 fn manhattan_distance(point_1: &Point, point_2: &Point) -> u64 {
-    ((point_1.x as i64 - point_2.x as i64).abs() + (point_1.y as i64 - point_2.y as i64).abs()) as u64
+    ((i64::from(point_1.x) - i64::from(point_2.x)).abs() + (i64::from(point_1.y) - i64::from(point_2.y)).abs()) as u64
 }
