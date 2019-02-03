@@ -41,6 +41,9 @@ fn main() {
     let result_6_1 = day_6::result_part_one();
     println!("Result_6_1: {}", result_6_1);
 
+    let result_6_2 = day_6::result_part_two();
+    println!("Result_6_2: {}", result_6_2);
+
     sw.stop();
     println!("\nDuration: {:?}", sw.elapsed())
 }

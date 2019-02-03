@@ -1,8 +1,43 @@
 use super::types::*;
+use super::utils::*;
 use std::collections::HashMap;
 use std::cmp;
 
-pub fn calculate_centre_point(points: &[Point]) -> Point {
+pub fn get_area_with_total_distance_less_than(points: &[Point], dist: u64) -> Vec<Point> {
+    let mut area = Vec::new();
+    let centre_point = calculate_centre_point(points);
+
+    if get_total_distance_to_points(&centre_point, points) >= dist {
+        return area;
+    } else {
+        area.push(centre_point.clone());
+    }
+
+    for offset in 1.. {
+        let initial_area_size = area.len();
+        let surrounding_points = centre_point.get_surrounding_points(offset);
+        for neighbour in surrounding_points {
+            if get_total_distance_to_points(&neighbour, points) < dist {
+                area.push(neighbour);
+            }
+        }
+
+        if initial_area_size == area.len() {
+            break;
+        }
+    }
+
+    area
+}
+
+fn get_total_distance_to_points(point: &Point, points: &[Point]) -> u64 {
+    points
+        .iter()
+        .map(|p| { manhattan_distance(point, p) })
+        .sum()
+}
+
+fn calculate_centre_point(points: &[Point]) -> Point {
     let extremes = get_all_direction_extremes(points);
     let x_centre = extremes[&AxisDirection::Left] + extremes[&AxisDirection::Right] / 2;
     let y_centre = extremes[&AxisDirection::Up] + extremes[&AxisDirection::Down] / 2;

@@ -156,7 +156,7 @@ fn point_is_further_than(from_test: &Point, from_cmp: &Point, to: Point) -> bool
     distance_test_point >= distance_cmp_point
 }
 
-fn manhattan_distance(point_1: &Point, point_2: &Point) -> u64 {
+pub fn manhattan_distance(point_1: &Point, point_2: &Point) -> u64 {
     ((i64::from(point_1.x) - i64::from(point_2.x)).abs()
         + (i64::from(point_1.y) - i64::from(point_2.y)).abs()) as u64
 }

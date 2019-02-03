@@ -15,3 +15,8 @@ pub fn result_part_one() -> i32 {
         .max()
         .unwrap_or(-1)
 }
+
+pub fn result_part_two() -> usize {
+    let coordinates = utils::get_coordinates(data::COORDINATES);
+    part_two::get_area_with_total_distance_less_than(&coordinates, 10000).len()
+}
