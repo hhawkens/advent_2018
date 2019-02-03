@@ -7,7 +7,7 @@ pub struct Point {
     pub y: i32,
 }
 
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq)]
 pub enum AxisDirection {
     Left,
     Right,

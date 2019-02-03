@@ -1,5 +1,6 @@
 mod data;
 mod part_one;
+mod part_two;
 mod types;
 mod utils;
 
