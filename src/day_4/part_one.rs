@@ -7,7 +7,7 @@ pub fn get_most_slept_minute_for_guard(id: i32, guard_events: &[GuardEvent]) -> 
     let mut start_minute = 0;
 
     guard_events
-        .into_iter()
+        .iter()
         .filter(|&ev| ev.id == id)
         .for_each(|ev| match ev.action {
             GuardAction::FallsAsleep => start_minute = ev.time.minute(),
