@@ -1,7 +1,7 @@
-use std::collections::{HashMap, BTreeSet};
 use crate::day_7::types::*;
-use std::hash::Hash;
 use itertools::Itertools;
+use std::collections::{BTreeSet, HashMap};
+use std::hash::Hash;
 
 pub fn get_tasks_order(tasks: &HashMap<TaskId, Deps>) -> String {
     let num_tasks = tasks.len();
@@ -9,7 +9,7 @@ pub fn get_tasks_order(tasks: &HashMap<TaskId, Deps>) -> String {
     let mut done_tasks = HashMap::with_capacity(num_tasks);
     let mut counter = 0usize;
 
-    while executable_tasks.len() > 0 {
+    while !executable_tasks.is_empty() {
         // Execute
         counter += 1;
         let &next_task_id_to_execute = executable_tasks.iter().nth(0).unwrap();
@@ -26,7 +26,7 @@ pub fn get_tasks_order(tasks: &HashMap<TaskId, Deps>) -> String {
 
     done_tasks
         .iter()
-        .sorted_by(|(_, i1), (_, i2)| { i1.cmp(i2) })
+        .sorted_by(|(_, i1), (_, i2)| i1.cmp(i2))
         .map(|(&id, _)| id)
         .collect()
 }
@@ -34,12 +34,15 @@ pub fn get_tasks_order(tasks: &HashMap<TaskId, Deps>) -> String {
 fn get_executable_tasks(tasks: &HashMap<TaskId, Deps>) -> BTreeSet<TaskId> {
     tasks
         .iter()
-        .filter(|(_, deps)| { deps.depending_on.len() == 0 })
-        .map(| (&id, _) | id)
+        .filter(|(_, deps)| deps.depending_on.is_empty())
+        .map(|(&id, _)| id)
         .collect()
 }
 
-fn contains_all<'a, K: 'a + Eq + Hash, V>(map: &HashMap<K, V>, keys: impl IntoIterator<Item=&'a K>) -> bool {
+fn contains_all<'a, K: 'a + Eq + Hash, V>(
+    map: &HashMap<K, V>,
+    keys: impl IntoIterator<Item = &'a K>,
+) -> bool {
     for key in keys {
         if !map.contains_key(key) {
             return false;

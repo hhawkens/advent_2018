@@ -6,5 +6,5 @@ pub type TaskId = char;
 #[derive(Debug, Eq, PartialEq)]
 pub struct Deps {
     pub dependency_of: HashSet<TaskId>,
-    pub depending_on: HashSet<TaskId>
+    pub depending_on: HashSet<TaskId>,
 }
