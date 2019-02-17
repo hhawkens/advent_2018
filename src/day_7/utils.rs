@@ -1,5 +1,7 @@
 use super::types::*;
 use std::collections::{HashMap, HashSet};
+use std::iter::FromIterator;
+use std::hash::Hash;
 
 pub fn get_tasks(tasks_text: &str) -> HashMap<TaskId, Deps> {
     let mut all_tasks = HashMap::new();
@@ -22,4 +24,24 @@ pub fn get_tasks(tasks_text: &str) -> HashMap<TaskId, Deps> {
     });
 
     all_tasks
+}
+
+pub fn get_executable_tasks<T: FromIterator<TaskId>>(tasks: &HashMap<TaskId, Deps>) -> T {
+    tasks
+        .iter()
+        .filter(|(_, deps)| deps.depending_on.is_empty())
+        .map(|(&id, _)| id)
+        .collect()
+}
+
+pub fn contains_all<'a, K: 'a + Eq + Hash, V>(
+    map: &HashMap<K, V>,
+    keys: impl IntoIterator<Item = &'a K>,
+) -> bool {
+    for key in keys {
+        if !map.contains_key(key) {
+            return false;
+        }
+    }
+    true
 }
