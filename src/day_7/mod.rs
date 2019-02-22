@@ -10,5 +10,6 @@ pub fn result_part_one() -> String {
 }
 
 pub fn result_part_two() -> usize {
-    0
+    let tasks = utils::get_tasks(data::STEPS);
+    part_two::get_tasks_completion_time(&tasks, 60, 5)
 }

@@ -34,12 +34,24 @@ pub fn get_executable_tasks<T: FromIterator<TaskId>>(tasks: &HashMap<TaskId, Dep
         .collect()
 }
 
-pub fn contains_all<'a, K: 'a + Eq + Hash, V>(
+pub fn hashmap_contains_all<'a, K: 'a + Eq + Hash, V>(
     map: &HashMap<K, V>,
     keys: impl IntoIterator<Item = &'a K>,
 ) -> bool {
     for key in keys {
         if !map.contains_key(key) {
+            return false;
+        }
+    }
+    true
+}
+
+pub fn hashset_contains_all<'a, K: 'a + Eq + Hash>(
+    set: &HashSet<K>,
+    keys: impl IntoIterator<Item = &'a K>,
+) -> bool {
+    for key in keys {
+        if !set.contains(key) {
             return false;
         }
     }

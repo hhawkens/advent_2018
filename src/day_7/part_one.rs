@@ -18,7 +18,7 @@ pub fn get_tasks_order(tasks: &HashMap<TaskId, Deps>) -> String {
         // Add new executable tasks
         for dependent_task_id in &tasks[&next_task_id_to_execute].dependency_of {
             let dependent_task = &tasks[&dependent_task_id];
-            if utils::contains_all(&done_tasks, &dependent_task.depending_on) {
+            if utils::hashmap_contains_all(&done_tasks, &dependent_task.depending_on) {
                 executable_tasks.insert(*dependent_task_id);
             }
         }
