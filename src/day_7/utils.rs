@@ -1,7 +1,7 @@
 use super::types::*;
 use std::collections::{HashMap, HashSet};
-use std::iter::FromIterator;
 use std::hash::Hash;
+use std::iter::FromIterator;
 
 pub fn get_tasks(tasks_text: &str) -> HashMap<TaskId, Deps> {
     let mut all_tasks = HashMap::new();

@@ -1,5 +1,5 @@
-use std::collections::HashSet;
 use self::WorkerState::*;
+use std::collections::HashSet;
 
 pub type TaskId = char;
 pub type TaskDuration = usize;
@@ -21,7 +21,7 @@ pub struct WorkerPool {
 pub struct Worker {
     id: usize,
     pub state: WorkerState,
-    pub worked_for_seconds: TaskDuration
+    pub worked_for_seconds: TaskDuration,
 }
 
 #[derive(Debug, Eq, PartialEq)]
@@ -46,11 +46,13 @@ impl WorkerPool {
         let mut pool = WorkerPool {
             workers: Vec::with_capacity(num_workers),
         };
-        let mut id = 0_usize;
 
-        for _ in 0..num_workers {
-            id += 1;
-            pool.workers.push(Worker { id, state: Free, worked_for_seconds: 0 });
+        for id in 0..num_workers {
+            pool.workers.push(Worker {
+                id,
+                state: Free,
+                worked_for_seconds: 0,
+            });
         }
 
         pool
@@ -63,9 +65,9 @@ impl WorkerPool {
             Some(worker) => {
                 worker.state = Busy(task_id, task_duration);
                 worker.worked_for_seconds = 0;
-                return true;
-            },
-            None => return false
+                true
+            }
+            None => false,
         }
     }
 
@@ -81,8 +83,8 @@ impl WorkerPool {
                         worker.set_free();
                         finished_tasks.push(task_id);
                     }
-                },
-                Free => { }
+                }
+                Free => {}
             }
         }
 
@@ -94,11 +96,9 @@ impl WorkerPool {
         self.workers
             .iter()
             .filter(|w| w.state != Free)
-            .map(|w| {
-                match w.state {
-                    Busy(task_id, _) => task_id,
-                    _ => panic!(),
-                }
+            .map(|w| match w.state {
+                Busy(task_id, _) => task_id,
+                _ => panic!(),
             })
             .collect()
     }

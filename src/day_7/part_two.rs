@@ -1,8 +1,12 @@
-use std::collections::{HashMap, HashSet};
 use crate::day_7::types::*;
 use crate::day_7::utils;
+use std::collections::{HashMap, HashSet};
 
-pub fn get_tasks_completion_time(tasks: &HashMap<TaskId, Deps>, task_base_duration: usize, worker_count: usize) -> usize {
+pub fn get_tasks_completion_time(
+    tasks: &HashMap<TaskId, Deps>,
+    task_base_duration: usize,
+    worker_count: usize,
+) -> usize {
     let task_durations = all_task_durations(task_base_duration);
     let mut worker_pool = WorkerPool::new(worker_count);
     let mut ready_to_execute_tasks = utils::get_executable_tasks::<HashSet<TaskId>>(&tasks);
@@ -22,7 +26,10 @@ pub fn get_tasks_completion_time(tasks: &HashMap<TaskId, Deps>, task_base_durati
             finished_tasks.insert(just_finished_task_id);
             // Find new ready tasks
             for new_ready_task_id in &tasks[&just_finished_task_id].dependency_of {
-                if utils::hashset_contains_all(&finished_tasks, &tasks[&new_ready_task_id].depending_on) {
+                if utils::hashset_contains_all(
+                    &finished_tasks,
+                    &tasks[&new_ready_task_id].depending_on,
+                ) {
                     ready_to_execute_tasks.insert(*new_ready_task_id);
                 }
             }
@@ -38,7 +45,7 @@ pub fn all_task_durations(base_duration: usize) -> HashMap<TaskId, usize> {
     let mut task_durations = HashMap::with_capacity(26);
     let mut duration = base_duration;
 
-    for task in b'A'..b'Z'+1 {
+    for task in b'A'..=b'Z' {
         duration += 1;
         task_durations.insert(task as TaskId, duration);
     }
