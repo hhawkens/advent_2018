@@ -30,7 +30,7 @@ pub enum WorkerState {
     Busy(TaskId, TaskDuration),
 }
 
-/// --- WORKER --- ///
+/// ----------     WORKER     ---------- ///
 impl Worker {
     /// Ends the worker's currently assigned task
     pub fn set_free(&mut self) {
@@ -39,7 +39,7 @@ impl Worker {
     }
 }
 
-/// --- WORKER POOL --- ///
+/// ----------      WORKER POOL     ---------- ///
 impl WorkerPool {
     /// Creates new instance with n workers
     pub fn new(num_workers: usize) -> WorkerPool {

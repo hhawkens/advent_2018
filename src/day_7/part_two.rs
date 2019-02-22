@@ -7,7 +7,7 @@ pub fn get_tasks_completion_time(
     task_base_duration: usize,
     worker_count: usize,
 ) -> usize {
-    let task_durations = all_task_durations(task_base_duration);
+    let duration_per_task = duration_per_task(task_base_duration);
     let mut worker_pool = WorkerPool::new(worker_count);
     let mut ready_to_execute_tasks = utils::get_executable_tasks::<HashSet<TaskId>>(&tasks);
     let mut finished_tasks = HashSet::with_capacity(tasks.len());
@@ -15,7 +15,7 @@ pub fn get_tasks_completion_time(
 
     while finished_tasks.len() < tasks.len() {
         for ready_task in &ready_to_execute_tasks {
-            worker_pool.try_assign_task(*ready_task, task_durations[ready_task]);
+            worker_pool.try_assign_task(*ready_task, duration_per_task[ready_task]);
         }
         for in_progress_task in worker_pool.in_progress_tasks() {
             ready_to_execute_tasks.remove(&in_progress_task);
@@ -41,7 +41,7 @@ pub fn get_tasks_completion_time(
     current_second
 }
 
-pub fn all_task_durations(base_duration: usize) -> HashMap<TaskId, usize> {
+pub fn duration_per_task(base_duration: TaskDuration) -> HashMap<TaskId, TaskDuration> {
     let mut task_durations = HashMap::with_capacity(26);
     let mut duration = base_duration;
 
