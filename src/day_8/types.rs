@@ -1,10 +1,16 @@
-pub type MetaDataEntry = usize;
+mod node;
 
-pub struct Node<'a> {
-    pub children: Vec<&'a Node<'a>>,
-    pub meta_data: Vec<MetaDataEntry>
+pub type LicenseEntry = usize;
+pub type MetaDataEntry = LicenseEntry;
+pub type License = Vec<LicenseEntry>;
+
+#[derive(Debug)]
+pub struct Node {
+    children: Vec<Node>,
+    meta_data: Vec<MetaDataEntry>
 }
 
-pub struct Tree<'a> {
-    pub root: Node<'a>,
+#[derive(Debug)]
+pub struct Tree {
+    root: Node
 }
