@@ -1,4 +1,5 @@
 use crate::day_8::types::*;
+use std::collections::VecDeque;
 
 type NodeIndex = usize;
 
@@ -17,21 +18,20 @@ impl Node {
         current_index += 1; // Index is now at meta entry count
         let num_meta_entries = license[current_index];
 
+        current_index += 1; // Index is now at start of [the next child node] OR [meta data]
         match num_children {
             0 => {
-                current_index += 1; // Index is now at the first meta entry
-                let (meta_data, current_index) = Node::get_meta_entries(license, current_index, num_meta_entries);
+                let (meta_data, current_index) = Self::get_meta_entries(license, current_index, num_meta_entries);
                 (Node { children: vec![], meta_data }, current_index)
             },
             non_zero => {
-                current_index += 1; // Index is now at start of the next child node
                 let mut children = vec![];
-                for i in 0..non_zero {
-                    let (child, index) = Node::get_node(license, current_index);
+                for _ in 0..non_zero {
+                    let (child, index) = Self::get_node(license, current_index);
                     children.push(child);
                     current_index = index;
                 }
-                let (meta_data, current_index) = Node::get_meta_entries(license, current_index, num_meta_entries);
+                let (meta_data, current_index) = Self::get_meta_entries(license, current_index, num_meta_entries);
                 (Node { children, meta_data }, current_index)
             },
         }
@@ -48,5 +48,47 @@ impl Node {
         }
 
         (meta_entries, current_index)
+    }
+}
+
+/////////////////////////////////////////////////////   ITERATION   /////////////////////////////////////////////////////
+pub struct RefNodeIterator<'a> {
+    stack: VecDeque<&'a Node>,
+}
+
+impl<'a> Iterator for RefNodeIterator<'a> {
+    type Item = &'a Node;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let next = self.stack.pop_back();
+        match next {
+            Some(node) => {
+                for child in &node.children {
+                    self.stack.push_front(child);
+                }
+            },
+            _ => {}
+        }
+        next
+    }
+}
+
+impl<'a> IntoIterator for &'a Node {
+    type Item = Self;
+    type IntoIter = RefNodeIterator<'a>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        let mut iter = RefNodeIterator { stack: VecDeque::new() };
+        iter.stack.push_front(self);
+        iter
+    }
+}
+
+
+/////////////////////////////////////////////////////   TREE   /////////////////////////////////////////////////////
+impl Tree {
+    /// Gets the sum of all meta data entries of all nodes
+    pub fn meta_data_sum(&self) -> MetaDataEntry {
+        self.root.into_iter().map(|node| node.meta_data.iter().sum::<MetaDataEntry>()).sum()
     }
 }

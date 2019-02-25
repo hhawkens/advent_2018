@@ -12,5 +12,5 @@ pub struct Node {
 
 #[derive(Debug)]
 pub struct Tree {
-    root: Node
+    pub root: Node
 }

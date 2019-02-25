@@ -1,8 +1,8 @@
 mod types;
-mod part_one;
 mod data;
 mod utils;
 
 pub fn result_part_one() -> usize {
-    0
+    let license_tree = utils::get_license_tree(data::LICENSE);
+    license_tree.meta_data_sum()
 }
