@@ -1,7 +1,7 @@
 use self::types::MetaDataEntry;
 
-mod types;
 mod data;
+mod types;
 mod utils;
 
 pub fn result_part_one() -> MetaDataEntry {

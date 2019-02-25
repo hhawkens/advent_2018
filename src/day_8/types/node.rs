@@ -5,13 +5,13 @@ type NodeIndex = usize;
 
 impl Node {
     /// Creates a new root node from a license, which contains all child nodes
-    pub fn new(license: &License) -> Node {
+    pub fn new(license: &[LicenseEntry]) -> Node {
         let (root, _) = Node::get_node(&license, 0);
         root
     }
 
     /// Gets a node from given starting index (and all of its children, recursively)
-    fn get_node(license: &License, node_start_index: NodeIndex) -> (Node, NodeIndex) {
+    fn get_node(license: &[LicenseEntry], node_start_index: NodeIndex) -> (Node, NodeIndex) {
         let mut current_index = node_start_index;
         let num_children = license[current_index];
 
@@ -21,9 +21,16 @@ impl Node {
         current_index += 1; // Index is now at start of [the next child node] OR [meta data]
         match num_children {
             0 => {
-                let (meta_data, current_index) = Self::get_meta_entries(license, current_index, num_meta_entries);
-                (Node { children: vec![], meta_data }, current_index)
-            },
+                let (meta_data, current_index) =
+                    Self::get_meta_entries(license, current_index, num_meta_entries);
+                (
+                    Node {
+                        children: vec![],
+                        meta_data,
+                    },
+                    current_index,
+                )
+            }
             non_zero => {
                 let mut children = vec![];
                 for _ in 0..non_zero {
@@ -31,14 +38,25 @@ impl Node {
                     children.push(child);
                     current_index = index;
                 }
-                let (meta_data, current_index) = Self::get_meta_entries(license, current_index, num_meta_entries);
-                (Node { children, meta_data }, current_index)
-            },
+                let (meta_data, current_index) =
+                    Self::get_meta_entries(license, current_index, num_meta_entries);
+                (
+                    Node {
+                        children,
+                        meta_data,
+                    },
+                    current_index,
+                )
+            }
         }
     }
 
     /// Returns the meta entries from given starting index (also returns the next index after the meta entries)
-    fn get_meta_entries(license: &License, first_meta_entry_index: NodeIndex, num_meta_entries: usize) -> (Vec<MetaDataEntry>, NodeIndex) {
+    fn get_meta_entries(
+        license: &[LicenseEntry],
+        first_meta_entry_index: NodeIndex,
+        num_meta_entries: usize,
+    ) -> (Vec<MetaDataEntry>, NodeIndex) {
         let mut meta_entries = Vec::new();
         let mut current_index = first_meta_entry_index;
 
@@ -55,21 +73,18 @@ impl Node {
     }
 
     fn get_node_value(&self) -> MetaDataEntry {
-        match self.has_children() {
-            true => {
-                let mut child_meta_entries = 0;
+        if self.has_children() {
+            let mut child_meta_entries = 0;
 
-                for mut child_index in self.meta_data.iter().cloned() {
-                    child_index -= 1; // This is done because indexing of the children starts at 1
-                    if child_index < self.children.len() {
-                        child_meta_entries += self.children[child_index].get_node_value();
-                    }
+            for mut child_index in self.meta_data.iter().cloned() {
+                child_index -= 1; // This is done because indexing of the children starts at 1
+                if child_index < self.children.len() {
+                    child_meta_entries += self.children[child_index].get_node_value();
                 }
-                child_meta_entries
-            },
-            false => {
-                self.meta_data.iter().sum()
             }
+            child_meta_entries
+        } else {
+            self.meta_data.iter().sum()
         }
     }
 }
@@ -84,13 +99,10 @@ impl<'a> Iterator for RefNodeIterator<'a> {
 
     fn next(&mut self) -> Option<Self::Item> {
         let next = self.stack.pop_back();
-        match next {
-            Some(node) => {
-                for child in &node.children {
-                    self.stack.push_front(child);
-                }
-            },
-            _ => {}
+        if let Some(node) = next {
+            for child in &node.children {
+                self.stack.push_front(child);
+            }
         }
         next
     }
@@ -101,18 +113,22 @@ impl<'a> IntoIterator for &'a Node {
     type IntoIter = RefNodeIterator<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
-        let mut iter = RefNodeIterator { stack: VecDeque::new() };
+        let mut iter = RefNodeIterator {
+            stack: VecDeque::new(),
+        };
         iter.stack.push_front(self);
         iter
     }
 }
 
-
 /////////////////////////////////////////////////////   TREE   /////////////////////////////////////////////////////
 impl Tree {
     /// Gets the sum of all meta data entries of all nodes
     pub fn meta_data_sum(&self) -> MetaDataEntry {
-        self.root.into_iter().map(|node| node.meta_data.iter().sum::<MetaDataEntry>()).sum()
+        self.root
+            .into_iter()
+            .map(|node| node.meta_data.iter().sum::<MetaDataEntry>())
+            .sum()
     }
 
     /// Calculates the value of the root node

@@ -7,10 +7,10 @@ pub type License = Vec<LicenseEntry>;
 #[derive(Debug)]
 pub struct Node {
     children: Vec<Node>,
-    meta_data: Vec<MetaDataEntry>
+    meta_data: Vec<MetaDataEntry>,
 }
 
 #[derive(Debug)]
 pub struct Tree {
-    pub root: Node
+    pub root: Node,
 }
