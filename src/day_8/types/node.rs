@@ -91,4 +91,8 @@ impl Tree {
     pub fn meta_data_sum(&self) -> MetaDataEntry {
         self.root.into_iter().map(|node| node.meta_data.iter().sum::<MetaDataEntry>()).sum()
     }
+
+    pub fn root_node_value(&self) -> MetaDataEntry {
+        0
+    }
 }
