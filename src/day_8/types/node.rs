@@ -49,6 +49,29 @@ impl Node {
 
         (meta_entries, current_index)
     }
+
+    fn has_children(&self) -> bool {
+        !self.children.is_empty()
+    }
+
+    fn get_node_value(&self) -> MetaDataEntry {
+        match self.has_children() {
+            true => {
+                let mut child_meta_entries = 0;
+
+                for mut child_index in self.meta_data.iter().cloned() {
+                    child_index -= 1; // This is done because indexing of the children starts at 1
+                    if child_index < self.children.len() {
+                        child_meta_entries += self.children[child_index].get_node_value();
+                    }
+                }
+                child_meta_entries
+            },
+            false => {
+                self.meta_data.iter().sum()
+            }
+        }
+    }
 }
 
 /////////////////////////////////////////////////////   ITERATION   /////////////////////////////////////////////////////
@@ -92,7 +115,8 @@ impl Tree {
         self.root.into_iter().map(|node| node.meta_data.iter().sum::<MetaDataEntry>()).sum()
     }
 
+    /// Calculates the value of the root node
     pub fn root_node_value(&self) -> MetaDataEntry {
-        0
+        self.root.get_node_value()
     }
 }
