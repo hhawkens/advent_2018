@@ -1,0 +1,35 @@
+# Specifies which edition is used by the parser
+edition = "2018"
+
+# Whether to use different formatting for items and expressions if they satisfy a heuristic notion of 'small'
+use_small_heuristics = "Max"
+
+# Use tab characters for indentation, spaces for alignment
+hard_tabs = false
+
+# Maximum width of each line
+max_width = 125
+
+# Merge multiple derives into a single one
+merge_derives = true
+
+# Unix or Windows line endings
+newline_style = "Unix"
+
+# Remove nested parentheses
+remove_nested_parens = true
+
+# Reorder import and extern crate statements alphabetically in groups (a group is separated by a newline)
+reorder_imports = true
+
+# Reorder mod declarations alphabetically in group
+reorder_modules = true
+
+# Number of spaces per tab
+tab_spaces = 4
+
+# Use field initialize shorthand if possible
+use_field_init_shorthand = true
+
+# Replace uses of the try! macro by the ? shorthand
+use_try_shorthand = true
