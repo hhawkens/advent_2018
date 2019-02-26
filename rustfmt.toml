@@ -2,13 +2,13 @@
 edition = "2018"
 
 # Whether to use different formatting for items and expressions if they satisfy a heuristic notion of 'small'
-use_small_heuristics = "Max"
+use_small_heuristics = "Default"
 
 # Use tab characters for indentation, spaces for alignment
 hard_tabs = false
 
 # Maximum width of each line
-max_width = 125
+max_width = 110
 
 # Merge multiple derives into a single one
 merge_derives = true

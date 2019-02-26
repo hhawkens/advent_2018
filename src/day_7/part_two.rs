@@ -26,10 +26,7 @@ pub fn get_tasks_completion_time(
             finished_tasks.insert(just_finished_task_id);
             // Find new ready tasks
             for new_ready_task_id in &tasks[&just_finished_task_id].dependency_of {
-                if utils::hashset_contains_all(
-                    &finished_tasks,
-                    &tasks[&new_ready_task_id].depending_on,
-                ) {
+                if utils::hashset_contains_all(&finished_tasks, &tasks[&new_ready_task_id].depending_on) {
                     ready_to_execute_tasks.insert(*new_ready_task_id);
                 }
             }

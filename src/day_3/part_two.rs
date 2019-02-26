@@ -32,10 +32,7 @@ fn are_overlapping_horizontally(first: &Rect, second: &Rect) -> bool {
     leftmost.location.x + leftmost.size.w > rightmost.location.x
 }
 
-fn get_leftmost_and_rightmost_location<'a>(
-    first: &'a Rect,
-    second: &'a Rect,
-) -> (&'a Rect, &'a Rect) {
+fn get_leftmost_and_rightmost_location<'a>(first: &'a Rect, second: &'a Rect) -> (&'a Rect, &'a Rect) {
     if first.location.x < second.location.x {
         (first, second)
     } else {

@@ -98,11 +98,7 @@ fn point_area_is_limited_in_all_directions_by(test_point: &Point, points: &[Poin
     false
 }
 
-fn is_point_area_limited_by(
-    tested_point: &Point,
-    limiting_point: &Point,
-    direction: AxisDirection,
-) -> bool {
+fn is_point_area_limited_by(tested_point: &Point, limiting_point: &Point, direction: AxisDirection) -> bool {
     if tested_point == limiting_point {
         return false;
     }

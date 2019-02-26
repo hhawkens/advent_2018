@@ -40,13 +40,7 @@ impl Node {
                 }
                 let (meta_data, current_index) =
                     Self::get_meta_entries(license, current_index, num_meta_entries);
-                (
-                    Node {
-                        children,
-                        meta_data,
-                    },
-                    current_index,
-                )
+                (Node { children, meta_data }, current_index)
             }
         }
     }
