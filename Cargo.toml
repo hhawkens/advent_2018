@@ -1,6 +1,6 @@
 [package]
 name = "advent"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["John <purrlinn@web.de>"]
 edition = "2018"
 

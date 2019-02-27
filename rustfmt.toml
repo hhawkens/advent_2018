@@ -1,4 +1,4 @@
-# Specifies which edition is used by the parser
+# Specifies which edition is used by the parser (2015 or 2018)
 edition = "2018"
 
 # Whether to use different formatting for items and expressions if they satisfy a heuristic notion of 'small'
