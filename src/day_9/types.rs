@@ -26,7 +26,6 @@ pub struct Circle {
     next_marble: Marble,
 }
 
-#[derive(Debug)]
 pub struct Game {
     rules: GameRules,
     players: Vec<Player>,

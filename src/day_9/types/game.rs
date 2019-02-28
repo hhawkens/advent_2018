@@ -1,6 +1,7 @@
 use crate::day_9::types::*;
 use crate::day_9::utils;
 use std::collections::VecDeque;
+use std::fmt::{Debug, Formatter, Error};
 
 pub type Winner = Player;
 
@@ -46,5 +47,25 @@ impl Game {
         } else if score > self.rules.last_marble_score * 10 {
             panic!("Last score too high: {} -> {}", score, self.rules.last_marble_score);
         }
+    }
+}
+
+
+impl Debug for Game {
+    /// Custom string visualization
+    fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
+        let curr_player = &self.players[self.current_player_id];
+        let mut text = format!("Player [{}]  -  Score [{}]\n", curr_player.id, curr_player.score);
+
+        let circle = &self.circle;
+        for i in 0..circle.marbles.len() {
+            if i == circle.current_marble_index {
+                text += format!("({}) | ", &circle.marbles[i]).as_str();
+            } else {
+                text += format!("{} | ", &circle.marbles[i]).as_str();
+            }
+        }
+
+        f.write_str(text.as_str())
     }
 }
