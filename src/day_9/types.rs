@@ -16,7 +16,7 @@ pub struct Player {
 #[derive(Debug, Copy, Clone)]
 pub struct GameRules {
     pub num_players: usize,
-    pub last_marble_score: Score,
+    pub num_marbles: usize,
 }
 
 #[derive(Debug)]
@@ -32,5 +32,4 @@ pub struct Game {
     current_player_id: Id,
     circle: Circle,
     round: usize,
-    finished: bool,
 }

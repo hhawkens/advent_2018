@@ -8,7 +8,7 @@ pub fn get_game_rules(rules_text: &str) -> GameRules {
     let last_marble_points = matches.next().unwrap().as_str().parse().unwrap();
     GameRules {
         num_players,
-        last_marble_score: last_marble_points
+        num_marbles: last_marble_points
     }
 }
 

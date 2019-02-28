@@ -14,39 +14,34 @@ impl Game {
             current_player_id: 0,
             circle: Circle{marbles: (0..1).collect(), current_marble_index: 0, next_marble: 1},
             round: 0,
-            finished: false
         }
     }
 
-    pub fn play(&mut self) -> &Winner {
-        while !self.finished {
+    pub fn play(mut self) -> Winner {
+        while !self.is_finished() {
             self.play_one_round();
         }
 
-        let winner = self.players.iter()
-            .fold(&self.players[0], |winner, player| {
-                if winner.score >= player.score {
-                    winner
-                } else {
-                    player
-                }
-            });
+        let winner_id = self.players.iter().fold(&self.players[0], |winner, player| {
+            if winner.score >= player.score {
+                winner
+            } else {
+                player
+            }
+        }).id;
 
-        winner
+        self.players.remove(winner_id)
     }
 
-    /// Advances the game by one round
-    pub fn play_one_round(&mut self) {
+    fn play_one_round(&mut self) {
         let score = self.circle.play_next_marble();
 
         self.players[self.current_player_id].score += score;
         self.current_player_id = utils::circular_index(self.current_player_id as isize + 1, &self.players);
+    }
 
-        if score == self.rules.last_marble_score {
-            self.finished = true
-        } else if score > self.rules.last_marble_score * 10 {
-            panic!("Last score too high: {} -> {}", score, self.rules.last_marble_score);
-        }
+    fn is_finished(&self) -> bool {
+        self.circle.current_marble_index > self.rules.num_marbles
     }
 }
 
