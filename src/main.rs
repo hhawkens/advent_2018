@@ -6,6 +6,7 @@ mod day_5;
 mod day_6;
 mod day_7;
 mod day_8;
+mod day_9;
 
 fn main() {
     let mut sw = stopwatch::Stopwatch::start_new();
@@ -57,6 +58,12 @@ fn main() {
 
     let result_8_2 = day_8::result_part_two();
     println!("Result_8_2: {}", result_8_2);
+
+    let result_9_1 = day_9::result_part_one();
+    println!("Result_9_1: {}", result_9_1);
+
+    let result_9_2 = day_9::result_part_two();
+    println!("Result_9_2: {}", result_9_2);
 
     sw.stop();
     println!("\nDuration: {:?}", sw.elapsed())
