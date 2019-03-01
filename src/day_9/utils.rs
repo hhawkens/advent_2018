@@ -33,25 +33,21 @@ pub fn play_marble_game(num_players: u64, num_marbles: u64) -> u64 {
 /// Rotates given deque to the right(positive n) or to the left(negative n), emulating a circular collection
 /// (This function was not available in stable std at the time of writing)
 fn rotate<T>(deq: &mut VecDeque<T>, n: isize) {
-    if deq.len() == 0 {
+    if deq.is_empty() {
         return;
     }
 
     let abs = n.abs() as u64 % deq.len() as u64;
     if n >= 0 {
         for _ in 0..abs {
-            let popped = deq.pop_back();
-            match popped {
-                Some(val) => deq.push_front(val),
-                None => {},
+            if let Some(val) = deq.pop_back() {
+                deq.push_front(val)
             }
         }
     } else {
         for _ in 0..abs {
-            let popped = deq.pop_front();
-            match popped {
-                Some(val) => deq.push_back(val),
-                None => {},
+            if let Some(val) = deq.pop_front() {
+                deq.push_back(val)
             }
         }
     }
