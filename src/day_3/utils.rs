@@ -20,12 +20,7 @@ pub fn get_fabric_claims() -> HashMap<i32, Rect> {
 
 fn get_id(claim: &str) -> i32 {
     let re = Regex::new(r"#[0-9]*").unwrap();
-    re.find(claim)
-        .unwrap()
-        .as_str()
-        .replace("#", "")
-        .parse()
-        .unwrap()
+    re.find(claim).unwrap().as_str().replace("#", "").parse().unwrap()
 }
 
 fn get_rect_location(claim: &str) -> Point {
