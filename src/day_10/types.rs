@@ -1,8 +1,8 @@
-use std::ops::Add;
-use std::fmt::{Debug, Formatter, Error};
 use num_traits::abs;
 use ref_eq::ref_eq;
 use std::collections::HashSet;
+use std::fmt::{Debug, Error, Formatter};
+use std::ops::Add;
 
 pub type Velocity = Point;
 
@@ -22,7 +22,7 @@ pub struct Star {
 
 #[derive(Eq, PartialEq, Hash)]
 pub struct Sky {
-    pub stars: Vec<Star>
+    pub stars: Vec<Star>,
 }
 
 impl Add for &Point {
@@ -35,7 +35,6 @@ impl Add for &Point {
         }
     }
 }
-
 
 impl Star {
     /// Moves the location of this star one step forward, according to its velocity
@@ -67,13 +66,15 @@ impl Sky {
 
         (0..vertical_capacity)
             .map(|line_number| {
-                let relevant_stars = self.stars.iter()
+                let relevant_stars = self
+                    .stars
+                    .iter()
                     .filter(|&s| s.location.y == line_number as isize + up_extr)
                     .collect::<Vec<_>>();
                 let mut line = String::with_capacity(horizontal_capacity + 1); // +1 for the line break
 
                 for i in 0..line.capacity() as isize {
-                    if relevant_stars.iter().find(|&&s| s.location.x == i + left_extr ).is_some() {
+                    if relevant_stars.iter().any(|&s| s.location.x == i + left_extr) {
                         line.push_str("#");
                     } else if i == line.capacity() as isize - 1 {
                         line.push_str("\n");
@@ -147,7 +148,7 @@ impl Sky {
                 }
             }
 
-            stars_with_no_neighbours.len() == 0
+            stars_with_no_neighbours.is_empty()
         }
     }
 }
