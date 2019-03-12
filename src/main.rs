@@ -67,7 +67,7 @@ fn main() {
     println!("Result_9_2: {}", result_9_2);
 
     let result_10_1 = day_10::result_part_one();
-    println!("Result_10_1: {}", result_10_1);
+    println!("Result_10_1:\n{}", result_10_1);
 
     sw.stop();
     println!("\nDuration: {:?}", sw.elapsed())

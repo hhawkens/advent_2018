@@ -5,6 +5,12 @@ mod types;
 mod utils;
 
 pub fn result_part_one() -> String {
-    let stars: Vec<Star> = utils::get_stars(data::STARS);
-    "".to_string()
+    let stars = utils::get_stars(data::STARS);
+    let mut sky = Sky { stars };
+
+    while !sky.are_stars_aligned() {
+        sky.move_stars_one_step();
+    }
+
+    sky.to_string()
 }

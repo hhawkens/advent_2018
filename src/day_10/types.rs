@@ -1,5 +1,8 @@
 use std::ops::Add;
 use std::fmt::{Debug, Formatter, Error};
+use num_traits::abs;
+use ref_eq::ref_eq;
+use std::collections::HashSet;
 
 pub type Velocity = Point;
 
@@ -40,16 +43,29 @@ impl Star {
         self.location.x += self.velocity.x;
         self.location.y += self.velocity.y;
     }
+
+    /// Check if two stars are next to each other
+    pub fn are_adjacent(s1: &Star, s2: &Star) -> bool {
+        let diff_x = abs(s1.location.x - s2.location.x);
+        let diff_y = abs(s1.location.y - s2.location.y);
+        diff_x <= 1 && diff_y <= 1
+    }
 }
 
 impl Debug for Sky {
-    /// Custom debug string
     fn fmt(&self, f: &mut Formatter) -> Result<(), Error> {
+        f.write_str(&self.to_string())
+    }
+}
+
+impl Sky {
+    /// Custom debug string
+    pub fn to_string(&self) -> String {
         let (left_extr, right_extr, up_extr, down_extr) = self.get_extremes();
         let vertical_capacity = (down_extr - up_extr + 1) as usize;
         let horizontal_capacity = (right_extr - left_extr + 1) as usize;
 
-        let mut canvas = (0..vertical_capacity)
+        (0..vertical_capacity)
             .map(|line_number| {
                 let relevant_stars = self.stars.iter()
                     .filter(|&s| s.location.y == line_number as isize + up_extr)
@@ -68,13 +84,9 @@ impl Debug for Sky {
 
                 line
             })
-            .collect::<String>();
-
-        f.write_str(&canvas)
+            .collect::<String>()
     }
-}
 
-impl Sky {
     /// Get the leftmost, rightmost, uppermost and lowermost point values
     pub fn get_extremes(&self) -> (isize, isize, isize, isize) {
         let mut left = std::isize::MAX;
@@ -103,9 +115,39 @@ impl Sky {
         (left, right, up, down)
     }
 
+    /// Advances star positions according to their speed
     pub fn move_stars_one_step(&mut self) {
         for star in &mut self.stars {
             star.move_one_step();
+        }
+    }
+
+    /// Check if all stars have at least one direct neighbour
+    pub fn are_stars_aligned(&self) -> bool {
+        let (left_extr, right_extr, up_extr, down_extr) = self.get_extremes();
+        let diff_x = abs(right_extr - left_extr) as usize;
+        let diff_y = abs(down_extr - up_extr) as usize;
+        let dist = self.stars.len() / 6; // heuristic
+
+        if diff_x > dist && diff_y > dist {
+            false
+        } else {
+            let mut stars_with_no_neighbours = self.stars.iter().collect::<HashSet<_>>();
+
+            for star in &self.stars {
+                if !stars_with_no_neighbours.contains(star) {
+                    continue;
+                }
+                for inner_star in &self.stars {
+                    if !ref_eq(star, inner_star) && Star::are_adjacent(star, inner_star) {
+                        stars_with_no_neighbours.remove(star);
+                        stars_with_no_neighbours.remove(inner_star);
+                        break;
+                    }
+                }
+            }
+
+            stars_with_no_neighbours.len() == 0
         }
     }
 }
