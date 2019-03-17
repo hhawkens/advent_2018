@@ -1,5 +1,6 @@
 mod day_1;
 mod day_10;
+mod day_11;
 mod day_2;
 mod day_3;
 mod day_4;
@@ -69,6 +70,9 @@ fn main() {
     let (result_10_1, result_10_2) = day_10::result();
     println!("Result_10_1:\n{}", result_10_1);
     println!("Result_10_2: {}", result_10_2);
+
+    let result_11_1 = day_11::result_part_one();
+    println!("Result_11_1: {}", result_11_1);
 
     sw.stop();
     println!("\nDuration: {:?}", sw.elapsed())
