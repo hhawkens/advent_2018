@@ -1,18 +1,23 @@
+mod grid;
+
 use std::collections::HashMap;
 
 #[derive(Debug, Copy, Clone, Hash, Eq, PartialEq)]
 pub struct Point {
-    pub x: isize,
-    pub y: isize,
+    /// To the right
+    pub x: usize,
+    /// Downwards
+    pub y: usize,
 }
 
 #[derive(Debug)]
-struct FuelCell {
+pub struct FuelCell {
     pub location: Point,
-    pub power_level: Option<isize>,
+    pub power_level: isize,
 }
 
 #[derive(Debug)]
-struct Grid {
-    pub cells: HashMap<Point, FuelCell>,
+pub struct Grid {
+    pub fuel_cells: HashMap<Point, FuelCell>,
+    serial_number: usize,
 }
