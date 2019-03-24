@@ -8,10 +8,7 @@ pub fn get_coordinates(coord_text: &str) -> Vec<Point> {
         .lines()
         .map(|line| {
             let mut points = line.split(", ").map(|p| p.parse::<i32>().unwrap());
-            Point {
-                x: points.next().unwrap(),
-                y: points.next().unwrap(),
-            }
+            Point { x: points.next().unwrap(), y: points.next().unwrap() }
         })
         .collect()
 }
@@ -38,10 +35,7 @@ pub fn get_area_size_of_point(point: &Point, all_points: &[Point]) -> i32 {
 }
 
 pub fn get_limited_area_points(points: &[Point]) -> Vec<&Point> {
-    points
-        .iter()
-        .filter(|&p| point_area_is_limited_in_all_directions_by(p, points))
-        .collect()
+    points.iter().filter(|&p| point_area_is_limited_in_all_directions_by(p, points)).collect()
 }
 
 fn is_point_in_area_of(area_point: &Point, point: &Point, all_area_points: &[Point]) -> bool {
@@ -105,37 +99,25 @@ fn is_point_area_limited_by(tested_point: &Point, limiting_point: &Point, direct
 
     match direction {
         AxisDirection::Left => {
-            let extreme_left_point = Point {
-                x: MIN_INT,
-                y: tested_point.y,
-            };
+            let extreme_left_point = Point { x: MIN_INT, y: tested_point.y };
             if point_is_further_than(tested_point, limiting_point, extreme_left_point) {
                 return true;
             }
         }
         AxisDirection::Right => {
-            let extreme_right_point = Point {
-                x: MAX_INT,
-                y: tested_point.y,
-            };
+            let extreme_right_point = Point { x: MAX_INT, y: tested_point.y };
             if point_is_further_than(tested_point, limiting_point, extreme_right_point) {
                 return true;
             }
         }
         AxisDirection::Up => {
-            let extreme_up_point = Point {
-                x: tested_point.x,
-                y: MIN_INT,
-            };
+            let extreme_up_point = Point { x: tested_point.x, y: MIN_INT };
             if point_is_further_than(tested_point, limiting_point, extreme_up_point) {
                 return true;
             }
         }
         AxisDirection::Down => {
-            let extreme_down_point = Point {
-                x: tested_point.x,
-                y: MAX_INT,
-            };
+            let extreme_down_point = Point { x: tested_point.x, y: MAX_INT };
             if point_is_further_than(tested_point, limiting_point, extreme_down_point) {
                 return true;
             }

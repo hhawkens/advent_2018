@@ -21,15 +21,9 @@ pub fn get_guard_events() -> Vec<GuardEvent> {
 
 fn get_time_from_line(guard_event_text: &str) -> Time {
     let re = Regex::new(r"\[.*]").unwrap();
-    let time_text = re
-        .find(guard_event_text)
-        .unwrap()
-        .as_str()
-        .replace("[", "")
-        .replace("]", "");
+    let time_text = re.find(guard_event_text).unwrap().as_str().replace("[", "").replace("]", "");
 
-    Utc.datetime_from_str(time_text.as_str(), "%Y-%m-%d %H:%M")
-        .unwrap()
+    Utc.datetime_from_str(time_text.as_str(), "%Y-%m-%d %H:%M").unwrap()
 }
 
 fn get_id_from_line(guard_event_text: &str) -> i32 {
