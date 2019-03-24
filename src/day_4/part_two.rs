@@ -30,9 +30,8 @@ fn get_guard_sleep_minutes() -> HashMap<i32, GuardSleepMinutes> {
         match guard_event.action {
             GuardAction::FallsAsleep => start_sleep_event = Some(guard_event),
             GuardAction::WakesUp => {
-                let current_sleep_minutes = guard_sleep_minutes
-                    .entry(guard_event.id)
-                    .or_insert_with(GuardSleepMinutes::new);
+                let current_sleep_minutes =
+                    guard_sleep_minutes.entry(guard_event.id).or_insert_with(GuardSleepMinutes::new);
 
                 let start = start_sleep_event.unwrap().time.minute();
                 let end = guard_event.time.minute();

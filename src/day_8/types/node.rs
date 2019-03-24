@@ -23,13 +23,7 @@ impl Node {
             0 => {
                 let (meta_data, current_index) =
                     Self::get_meta_entries(license, current_index, num_meta_entries);
-                (
-                    Node {
-                        children: vec![],
-                        meta_data,
-                    },
-                    current_index,
-                )
+                (Node { children: vec![], meta_data }, current_index)
             }
             non_zero => {
                 let mut children = vec![];
@@ -107,9 +101,7 @@ impl<'a> IntoIterator for &'a Node {
     type IntoIter = RefNodeIterator<'a>;
 
     fn into_iter(self) -> Self::IntoIter {
-        let mut iter = RefNodeIterator {
-            stack: VecDeque::new(),
-        };
+        let mut iter = RefNodeIterator { stack: VecDeque::new() };
         iter.stack.push_front(self);
         iter
     }
@@ -119,10 +111,7 @@ impl<'a> IntoIterator for &'a Node {
 impl Tree {
     /// Gets the sum of all meta data entries of all nodes
     pub fn meta_data_sum(&self) -> MetaDataEntry {
-        self.root
-            .into_iter()
-            .map(|node| node.meta_data.iter().sum::<MetaDataEntry>())
-            .sum()
+        self.root.into_iter().map(|node| node.meta_data.iter().sum::<MetaDataEntry>()).sum()
     }
 
     /// Calculates the value of the root node

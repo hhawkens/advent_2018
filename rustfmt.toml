@@ -1,8 +1,10 @@
-# Specifies which edition is used by the parser (2015 or 2018)
+# Specifies which edition is used by the parser
+# Options: 2015, 2018
 edition = "2018"
 
 # Whether to use different formatting for items and expressions if they satisfy a heuristic notion of 'small'
-use_small_heuristics = "Default"
+# Options: Default, Off, Max
+use_small_heuristics = "Max"
 
 # Use tab characters for indentation, spaces for alignment
 hard_tabs = false
@@ -14,6 +16,7 @@ max_width = 110
 merge_derives = true
 
 # Unix or Windows line endings
+# Options: Auto, Native, Unix, Windows
 newline_style = "Unix"
 
 # Remove nested parentheses

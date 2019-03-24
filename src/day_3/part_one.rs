@@ -27,10 +27,7 @@ fn get_claimed_inches(claim: &Rect) -> Vec<Point> {
 
     for vertical in loc.y..loc.y + size.h {
         for horizontal in loc.x..loc.x + size.w {
-            result.push(Point {
-                x: horizontal,
-                y: vertical,
-            })
+            result.push(Point { x: horizontal, y: vertical })
         }
     }
     result

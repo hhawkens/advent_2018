@@ -42,10 +42,8 @@ fn react_polymer_one_iteration_parallel(polymer: &str) -> Polymer {
     let mut reacted_polymer = polymer.to_string();
     let text_chunks = split_string_into_chunks(&reacted_polymer, TASK_COUNT / 3);
 
-    reacted_polymer = text_chunks
-        .par_iter()
-        .map(|text_chunk| react_polymer_one_iteration(text_chunk))
-        .collect();
+    reacted_polymer =
+        text_chunks.par_iter().map(|text_chunk| react_polymer_one_iteration(text_chunk)).collect();
 
     reacted_polymer
 }
