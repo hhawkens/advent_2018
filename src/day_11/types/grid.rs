@@ -1,5 +1,6 @@
 use super::*;
 use std::cmp::min;
+use rayon::prelude::*;
 
 impl Grid {
     /// Creates new grid with given size
@@ -27,14 +28,14 @@ impl Grid {
         let max_sub_grid_size = min(self.size.x, self.size.y);
 
         (1..max_sub_grid_size + 1)
-            .into_iter()
+            .into_par_iter()
             .map(|size| {
                 let sub_grid_size = Size {x: size, y: size};
                 let (largest_power_point, largest_power) =
                     self.lookup_largest_total_power(sub_grid_size, &power_summed_area_table);
                 (largest_power_point, largest_power, size)
             })
-            .fold((Point {x: 0, y: 0}, std::isize::MIN, 0), |acc, curr| {
+            .reduce(|| (Point {x: 0, y: 0}, std::isize::MIN, 0), |acc, curr| {
                 let (_, max_power, _) = acc;
                 let (_, curr_power, _) = curr;
                 if curr_power > max_power {
