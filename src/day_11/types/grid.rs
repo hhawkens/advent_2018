@@ -52,7 +52,7 @@ impl Grid {
     fn lookup_largest_total_power(
         &self,
         sub_grid_size: Size,
-        power_table: &Vec<PowerLevel>,
+        power_table: &[PowerLevel],
     ) -> (Point, PowerLevel) {
         let (mut max_point, mut max_power_level) = (Point { x: 0, y: 0 }, std::isize::MIN as isize);
 
