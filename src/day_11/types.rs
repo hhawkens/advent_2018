@@ -3,7 +3,7 @@ mod grid;
 pub type Size = Point;
 pub type PowerLevel = isize;
 
-#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq)] // TODO what can be removed?
+#[derive(Debug, Copy, Clone)]
 pub struct Point {
     /// To the right
     pub x: usize,
