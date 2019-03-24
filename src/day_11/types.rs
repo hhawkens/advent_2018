@@ -1,10 +1,9 @@
 mod grid;
 
-use std::collections::HashMap;
-
 pub type Size = Point;
+pub type PowerLevel = isize;
 
-#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Hash, Eq, PartialEq)] // TODO what can be removed?
 pub struct Point {
     /// To the right
     pub x: usize,
@@ -13,14 +12,8 @@ pub struct Point {
 }
 
 #[derive(Debug)]
-pub struct FuelCell {
-    pub location: Point,
-    pub power_level: isize,
-}
-
-#[derive(Debug)]
 pub struct Grid {
-    pub fuel_cells: HashMap<Point, FuelCell>,
     size: Size,
     serial_number: usize,
+    fuel_cells: Vec<PowerLevel>, // Flat representation of a logically 2D array
 }

@@ -1,82 +1,100 @@
 use super::*;
-use std::collections::HashMap;
 
 impl Grid {
     /// Creates new grid with given size
-    pub fn new(horizontal_size: usize, vertical_size: usize, serial_number: usize) -> Grid {
-        let mut fuel_cells = HashMap::with_capacity(horizontal_size * vertical_size);
+    pub fn new(size: Size, serial_number: usize) -> Grid {
+        let mut fuel_cells = Vec::with_capacity(size.x * size.y);
 
-        for x in 1..=horizontal_size {
-            for y in 1..=vertical_size {
+        for y in 1..=size.y {
+            for x in 1..=size.x {
                 let location = Point { x, y };
-                let power_level = get_cell_power_level(location, serial_number);
-                let cell = FuelCell {
-                    location,
-                    power_level,
-                };
-                fuel_cells.insert(cell.location, cell);
+                let power_level = Self::calculate_cell_power_level(location, serial_number);
+                fuel_cells.push(power_level);
             }
         }
 
-        Grid {
-            fuel_cells,
-            serial_number,
-            size: Size {
-                x: horizontal_size,
-                y: vertical_size,
-            },
-        }
+        Grid { size, serial_number, fuel_cells, }
     }
 
-    pub fn get_largest_power_level_in_sub_grid(&self, sub_grid_size: Size) -> (Point, isize) {
-        let mut largest_power_level: Option<(Point, isize)> = None;
+    pub fn find_largest_total_power(&self, sub_grid_size: Size) -> (Point, PowerLevel) {
+        let power_summed_area_table = self.create_summed_area_table();
+        self.lookup_largest_total_power(sub_grid_size, &power_summed_area_table)
+    }
 
-        for x in 1..=self.size.x - sub_grid_size.x {
-            for y in 1..=self.size.y - sub_grid_size.y {
-                let upper_left_corner = Point { x, y };
-                let power_level = self.get_sub_grid_power_level(upper_left_corner, sub_grid_size);
-                match largest_power_level {
-                    None => largest_power_level = Some((upper_left_corner, power_level)),
-                    Some((_, curr_largest)) => {
-                        if power_level > curr_largest {
-                            largest_power_level = Some((upper_left_corner, power_level))
-                        }
-                    }
+    fn lookup_largest_total_power(&self, sub_grid_size: Size, power_table: &Vec<PowerLevel>) -> (Point, PowerLevel) {
+        let (mut max_point, mut max_power_level) = (Point{x: 0, y: 0}, std::isize::MIN as isize);
+
+        for y in 1..=self.size.y - sub_grid_size.y + 1 {
+            for x in 1..=self.size.x - sub_grid_size.x + 1 {
+                let table_x = x + sub_grid_size.x - 1;
+                let table_y = y + sub_grid_size.y - 1;
+                let table_index = self.get_array_2d_flat_index(table_x, table_y);
+                let mut power_level = power_table[table_index];
+
+                if x > 1 && y > 1 {
+                    power_level -= power_table[self.get_array_2d_flat_index(table_x - sub_grid_size.x, table_y)];
+                    power_level -= power_table[self.get_array_2d_flat_index(table_x, table_y - sub_grid_size.y)];
+                    power_level += power_table[self.get_array_2d_flat_index(table_x - sub_grid_size.x, table_y - sub_grid_size.y)];
+                } else if x > 1 {
+                    power_level -= power_table[self.get_array_2d_flat_index(table_x - sub_grid_size.x, table_y)];
+                } else if y > 1 {
+                    power_level -= power_table[self.get_array_2d_flat_index(table_x, table_y - sub_grid_size.y)];
+                }
+
+                if power_level > max_power_level {
+                    max_point = Point {x, y};
+                    max_power_level = power_level;
                 }
             }
         }
 
-        match largest_power_level {
-            None => (Point { x: 0, y: 0 }, 0),
-            Some(x) => x,
-        }
+        (max_point, max_power_level)
     }
 
-    /// Calculate the power level of given x*y sub grid
-    pub fn get_sub_grid_power_level(&self, upper_left_corner: Point, sub_grid_size: Size) -> isize {
-        if upper_left_corner.x + sub_grid_size.x > self.size.x + 1
-            || upper_left_corner.y + sub_grid_size.y > self.size.y + 1
-        {
-            panic!("Too much");
-        }
+    fn create_summed_area_table(&self) -> Vec<PowerLevel> {
+        let mut area_table = Vec::with_capacity(self.size.x * self.size.y);
 
-        let mut accumulated_power_level = 0;
-        for x in upper_left_corner.x..upper_left_corner.x + sub_grid_size.x {
-            for y in upper_left_corner.y..upper_left_corner.y + sub_grid_size.y {
-                accumulated_power_level += self.fuel_cells[&Point { x, y }].power_level;
+        for y in 1..=self.size.y {
+            for x in 1..=self.size.x {
+                let power_level = self.get_power_level_at_point(Point{x, y});
+
+                if x > 1 && y > 1 {
+                    let area_above_value = area_table[self.get_array_2d_flat_index(x, y - 1)];
+                    let area_left_value = area_table[self.get_array_2d_flat_index(x - 1, y)];
+                    let area_left_above_value = area_table[self.get_array_2d_flat_index(x - 1, y - 1)];
+                    area_table.push(power_level + area_above_value + area_left_value - area_left_above_value);
+                } else if x > 1 {
+                    let area_left_value = area_table[self.get_array_2d_flat_index(x - 1, y)];
+                    area_table.push(power_level + area_left_value);
+                } else if y > 1 {
+                    let area_above_value = area_table[self.get_array_2d_flat_index(x, y - 1)];
+                    area_table.push(power_level + area_above_value);
+                } else {
+                    area_table.push(power_level)
+                }
             }
         }
-        accumulated_power_level
+
+        area_table
     }
-}
 
-fn get_cell_power_level(location: Point, serial_number: usize) -> isize {
-    let rack_id = location.x + 10;
-    let mut power_level: isize = (rack_id * location.y) as isize;
-    power_level += serial_number as isize;
-    power_level *= rack_id as isize;
-    power_level = power_level / 100 % 10;
-    power_level -= 5;
+    fn get_power_level_at_point(&self, point: Point) -> PowerLevel {
+        let index = self.get_array_2d_flat_index(point.x, point.y);
+        self.fuel_cells[index]
+    }
 
-    power_level
+    fn get_array_2d_flat_index(&self, x: usize, y: usize) -> usize {
+        self.size.x * (y - 1) + (x - 1)
+    }
+
+    fn calculate_cell_power_level(location: Point, serial_number: usize) -> PowerLevel {
+        let rack_id = location.x + 10;
+        let mut power_level: isize = (rack_id * location.y) as isize;
+        power_level += serial_number as isize;
+        power_level *= rack_id as isize;
+        power_level = power_level / 100 % 10;
+        power_level -= 5;
+
+        power_level
+    }
 }
