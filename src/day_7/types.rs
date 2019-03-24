@@ -43,16 +43,10 @@ impl Worker {
 impl WorkerPool {
     /// Creates new instance with n workers
     pub fn new(num_workers: usize) -> WorkerPool {
-        let mut pool = WorkerPool {
-            workers: Vec::with_capacity(num_workers),
-        };
+        let mut pool = WorkerPool { workers: Vec::with_capacity(num_workers) };
 
         for id in 0..num_workers {
-            pool.workers.push(Worker {
-                id,
-                state: Free,
-                worked_for_seconds: 0,
-            });
+            pool.workers.push(Worker { id, state: Free, worked_for_seconds: 0 });
         }
 
         pool

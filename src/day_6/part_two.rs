@@ -38,30 +38,15 @@ fn calculate_centre_point(points: &[Point]) -> Point {
     let extremes = get_all_direction_extremes(points);
     let x_centre = extremes[&AxisDirection::Left] + extremes[&AxisDirection::Right] / 2;
     let y_centre = extremes[&AxisDirection::Up] + extremes[&AxisDirection::Down] / 2;
-    Point {
-        x: x_centre,
-        y: y_centre,
-    }
+    Point { x: x_centre, y: y_centre }
 }
 
 fn get_all_direction_extremes(points: &[Point]) -> HashMap<AxisDirection, i32> {
     let mut extremes = HashMap::new();
-    extremes.insert(
-        AxisDirection::Left,
-        get_extreme_for_direction(points, AxisDirection::Left),
-    );
-    extremes.insert(
-        AxisDirection::Right,
-        get_extreme_for_direction(points, AxisDirection::Right),
-    );
-    extremes.insert(
-        AxisDirection::Up,
-        get_extreme_for_direction(points, AxisDirection::Up),
-    );
-    extremes.insert(
-        AxisDirection::Down,
-        get_extreme_for_direction(points, AxisDirection::Down),
-    );
+    extremes.insert(AxisDirection::Left, get_extreme_for_direction(points, AxisDirection::Left));
+    extremes.insert(AxisDirection::Right, get_extreme_for_direction(points, AxisDirection::Right));
+    extremes.insert(AxisDirection::Up, get_extreme_for_direction(points, AxisDirection::Up));
+    extremes.insert(AxisDirection::Down, get_extreme_for_direction(points, AxisDirection::Down));
 
     extremes
 }

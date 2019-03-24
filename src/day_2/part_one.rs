@@ -22,7 +22,5 @@ fn has_identical_letters(word: &str, num_identical_letters: i32) -> bool {
     for c in word.chars() {
         *letter_count_map.entry(c).or_insert(0) += 1;
     }
-    letter_count_map
-        .values()
-        .any(|count| *count == num_identical_letters)
+    letter_count_map.values().any(|count| *count == num_identical_letters)
 }

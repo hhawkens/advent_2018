@@ -4,7 +4,7 @@ edition = "2018"
 
 # Whether to use different formatting for items and expressions if they satisfy a heuristic notion of 'small'
 # Options: Default, Off, Max
-use_small_heuristics = "Default"
+use_small_heuristics = "Max"
 
 # Use tab characters for indentation, spaces for alignment
 hard_tabs = false

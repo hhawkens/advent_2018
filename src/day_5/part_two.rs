@@ -18,7 +18,5 @@ pub fn get_stripped_polymer_reacted_size<'a>(
 
 fn remove_unit_type_from_polymer(unit_type: char, polymer: &str) -> Polymer {
     let unit_type_other_polarity = unit_type.to_uppercase().nth(0).unwrap();
-    polymer
-        .replace(unit_type, "")
-        .replace(unit_type_other_polarity, "")
+    polymer.replace(unit_type, "").replace(unit_type_other_polarity, "")
 }

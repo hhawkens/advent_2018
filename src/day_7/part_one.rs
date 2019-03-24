@@ -24,9 +24,5 @@ pub fn get_tasks_order(tasks: &HashMap<TaskId, Deps>) -> String {
         }
     }
 
-    done_tasks
-        .iter()
-        .sorted_by(|(_, i1), (_, i2)| i1.cmp(i2))
-        .map(|(&id, _)| id)
-        .collect()
+    done_tasks.iter().sorted_by(|(_, i1), (_, i2)| i1.cmp(i2)).map(|(&id, _)| id).collect()
 }

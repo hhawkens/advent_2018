@@ -6,18 +6,15 @@ pub fn get_most_slept_minute_for_guard(id: i32, guard_events: &[GuardEvent]) -> 
     let mut minutes_slept_map = HashMap::new();
     let mut start_minute = 0;
 
-    guard_events
-        .iter()
-        .filter(|&ev| ev.id == id)
-        .for_each(|ev| match ev.action {
-            GuardAction::FallsAsleep => start_minute = ev.time.minute(),
-            GuardAction::WakesUp => {
-                for m in start_minute..ev.time.minute() {
-                    *minutes_slept_map.entry(m).or_insert(0) += 1;
-                }
+    guard_events.iter().filter(|&ev| ev.id == id).for_each(|ev| match ev.action {
+        GuardAction::FallsAsleep => start_minute = ev.time.minute(),
+        GuardAction::WakesUp => {
+            for m in start_minute..ev.time.minute() {
+                *minutes_slept_map.entry(m).or_insert(0) += 1;
             }
-            _ => {}
-        });
+        }
+        _ => {}
+    });
 
     get_most_slept_minute(&minutes_slept_map)
 }

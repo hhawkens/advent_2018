@@ -15,11 +15,7 @@ impl Grid {
             }
         }
 
-        Grid {
-            size,
-            serial_number,
-            fuel_cells,
-        }
+        Grid { size, serial_number, fuel_cells }
     }
 
     pub fn find_largest_total_power(&self, sub_grid_size: Size) -> (Point, PowerLevel) {
