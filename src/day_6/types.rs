@@ -27,27 +27,27 @@ impl Point {
         surrounding_points.push(Point { x: self.x + offset, y: self.y + offset }); // Starting at bottom right
 
         for _ in 0..double_offset {
-            // Moving left to the bottom left
             let last_point = surrounding_points.last().unwrap();
-            surrounding_points.push(Point { x: last_point.x - 1, y: last_point.y });
+            let bottom_left = Point { x: last_point.x - 1, y: last_point.y };
+            surrounding_points.push(bottom_left);
         }
 
         for _ in 0..double_offset {
-            // Moving up to the upper left
             let last_point = surrounding_points.last().unwrap();
-            surrounding_points.push(Point { x: last_point.x, y: last_point.y - 1 });
+            let upper_left = Point { x: last_point.x, y: last_point.y - 1 };
+            surrounding_points.push(upper_left);
         }
 
         for _ in 0..double_offset {
-            // Moving right to the upper right
             let last_point = surrounding_points.last().unwrap();
-            surrounding_points.push(Point { x: last_point.x + 1, y: last_point.y });
+            let upper_right = Point { x: last_point.x + 1, y: last_point.y };
+            surrounding_points.push(upper_right);
         }
 
         for _ in 0..double_offset - 1 {
-            // Moving down to the bottom right (where we started)
             let last_point = surrounding_points.last().unwrap();
-            surrounding_points.push(Point { x: last_point.x, y: last_point.y + 1 });
+            let bottom_right = Point { x: last_point.x, y: last_point.y + 1 };
+            surrounding_points.push(bottom_right);
         }
 
         surrounding_points
